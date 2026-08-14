@@ -74,6 +74,20 @@ This repo is designed to put simple rails around that.
 ### Examples
 - `examples/.env.example` — safe environment variable example
 - `examples/SAFE_PROMPT_TEMPLATE.md` — template for asking AI for changes with proper context
+- `examples/stacks/react-node.md` — safe baseline for React + Node + Postgres
+- `examples/stacks/nextjs.md` — safe baseline for Next.js projects
+- `examples/stacks/n8n.md` — safe baseline for n8n workflows
+- `examples/stacks/python.md` — safe baseline for Python projects
+- `examples/deploys/rollback-simple.md` — simple deploy with basic rollback
+- `examples/deploys/rollback-db.md` — deploy with database rollback plan
+- `examples/deploys/rollback-automatizacion.md` — automation rollback example
+- `examples/deploys/rollback-landing.md` — landing rollback example
+
+### Checklists
+- `checklists/saas-con-usuarios.md` — checklist for SaaS apps with users
+- `checklists/automatizacion-interna.md` — checklist for internal automations
+- `checklists/landing-web.md` — checklist for landing pages and public sites
+- `checklists/dashboard-admin.md` — checklist for admin dashboards
 
 ### Scripts
 - `scripts/backup-example.sh` — simple backup script example

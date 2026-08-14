@@ -76,6 +76,20 @@ Este repo intenta poner barandillas simples para evitar eso.
 ### Examples
 - `examples/.env.example` — ejemplo seguro de variables de entorno
 - `examples/SAFE_PROMPT_TEMPLATE.md` — plantilla para pedir cambios a la IA con contexto
+- `examples/stacks/react-node.md` — base segura para React + Node + Postgres
+- `examples/stacks/nextjs.md` — base segura para proyectos Next.js
+- `examples/stacks/n8n.md` — base segura para workflows n8n
+- `examples/stacks/python.md` — base segura para proyectos Python
+- `examples/deploys/rollback-simple.md` — despliegue simple con rollback básico
+- `examples/deploys/rollback-db.md` — despliegue con plan de rollback de base de datos
+- `examples/deploys/rollback-automatizacion.md` — ejemplo de rollback para automatizaciones
+- `examples/deploys/rollback-landing.md` — ejemplo de rollback para landing o web pública
+
+### Checklists
+- `checklists/saas-con-usuarios.md` — checklist para SaaS con usuarios
+- `checklists/automatizacion-interna.md` — checklist para automatizaciones internas
+- `checklists/landing-web.md` — checklist para landings y webs públicas
+- `checklists/dashboard-admin.md` — checklist para dashboards admin
 
 ### Scripts
 - `scripts/backup-example.sh` — ejemplo simple de script de backup
@@ -90,6 +104,8 @@ Este repo intenta poner barandillas simples para evitar eso.
 6. `docs/07-claude-code.md`
 7. `docs/08-codex.md`
 8. `docs/09-claude-code-vs-codex.md`
+9. revisa los ejemplos de `examples/stacks/` si tu proyecto encaja con uno de ellos
+10. usa `checklists/` y `examples/deploys/` cuando vayas a desplegar
 
 ## Regla de oro
 
@@ -136,12 +152,10 @@ Menos "qué es una API" y más:
 
 ## Siguientes mejoras sugeridas
 
-- versión en inglés
-- ejemplos por stack (`React+Node`, `Next.js`, `n8n`, `Python`)
-- reglas y automatización para evitar subir secretos al repositorio
-- carpeta `checklists/` con flujos por tipo de app
-- guía comparativa `Claude Code vs Codex`
-- ejemplos por tipo de despliegue y rollback
+- traducir también las docs clave al inglés
+- añadir más ejemplos por stack y por tipo de app
+- ampliar los playbooks de deploy y rollback
+- añadir más checklists por tipo de proyecto
 
 ## Licencia
 
