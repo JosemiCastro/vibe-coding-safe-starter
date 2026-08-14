@@ -1,5 +1,9 @@
 # Vibe Coding Safe Starter
 
+[![secret-scan](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/secret-scan.yml)
+
+[English version](./README.en.md)
+
 Guía práctica para gente que empieza a construir software con IA sin base fuerte de programación.
 
 La idea no es quitarte las ganas de crear.
@@ -61,6 +65,7 @@ Este repo intenta poner barandillas simples para evitar eso.
 - `docs/06-trabajar-con-ia-sin-romperlo-todo.md` — flujo recomendado de cambios con IA
 - `docs/07-claude-code.md` — cómo usar Claude Code con seguridad si estás empezando
 - `docs/08-codex.md` — cómo usar Codex con límites y criterio
+- `docs/09-claude-code-vs-codex.md` — cuándo usar Claude Code y cuándo usar Codex
 
 ### Templates
 - `templates/PROJECT_BRIEF.md` — briefing mínimo de cualquier app
@@ -84,6 +89,7 @@ Este repo intenta poner barandillas simples para evitar eso.
 5. `docs/06-trabajar-con-ia-sin-romperlo-todo.md`
 6. `docs/07-claude-code.md`
 7. `docs/08-codex.md`
+8. `docs/09-claude-code-vs-codex.md`
 
 ## Regla de oro
 
@@ -102,7 +108,7 @@ Si una app tiene usuarios, pagos, datos o acceso a APIs de terceros, nunca hagas
 3. crea tu `.env` a partir de `examples/.env.example`
 4. define un método de backup antes de tocar producción
 5. usa `templates/PRE_DEPLOY_CHECKLIST.md` en cada deploy
-6. si trabajas con agentes, lee también `docs/07-claude-code.md` y `docs/08-codex.md`
+6. si trabajas con agentes, lee también `docs/07-claude-code.md`, `docs/08-codex.md` y `docs/09-claude-code-vs-codex.md`
 
 ## Qué NO intenta hacer este repo
 
