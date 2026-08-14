@@ -156,7 +156,3 @@ Menos "qué es una API" y más:
 - añadir más ejemplos por stack y por tipo de app
 - ampliar los playbooks de deploy y rollback
 - añadir más checklists por tipo de proyecto
-
-## Licencia
-
-MIT
