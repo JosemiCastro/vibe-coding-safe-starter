@@ -34,9 +34,11 @@ Este repo pone barandillas simples para reducir justo eso.
 ## Qué encontrarás aquí
 
 - principios operativos para construir con IA sin liarla
-- seguridad básica antes de publicar nada
-- backups y recuperación
-- deuda técnica mínima aceptable
+- reglas concretas sobre dónde NO guardar claves
+- criterios claros sobre cuándo NO desplegar
+- guías simples para rollback y reversión
+- cómo pedir cambios pequeños a la IA
+- cómo no perder la base de datos
 - checklist de predeploy
 - plantillas para documentar proyectos, cambios e incidentes
 - guías específicas para trabajar con Claude Code y Codex
@@ -66,6 +68,11 @@ Este repo intenta poner barandillas simples para evitar eso.
 - `docs/07-claude-code.md` — cómo usar Claude Code con seguridad si estás empezando
 - `docs/08-codex.md` — cómo usar Codex con límites y criterio
 - `docs/09-claude-code-vs-codex.md` — cuándo usar Claude Code y cuándo usar Codex
+- `docs/10-donde-no-guardar-claves.md` — errores típicos al gestionar secretos
+- `docs/11-cuando-no-desplegar.md` — señales claras para frenar un deploy
+- `docs/12-como-revertir.md` — rollback simple para gente no técnica
+- `docs/13-como-pedir-cambios-pequenos-a-la-ia.md` — cómo trocear cambios para no romper la app
+- `docs/14-como-no-perder-la-base-de-datos.md` — reglas mínimas para no cargarte la DB
 
 ### Templates
 - `templates/PROJECT_BRIEF.md` — briefing mínimo de cualquier app
@@ -96,16 +103,21 @@ Este repo intenta poner barandillas simples para evitar eso.
 
 ## Orden recomendado de lectura
 
-1. `docs/01-principios.md`
-2. `docs/02-seguridad-basica.md`
-3. `docs/03-backups.md`
-4. `docs/05-checklist-antes-de-desplegar.md`
-5. `docs/06-trabajar-con-ia-sin-romperlo-todo.md`
-6. `docs/07-claude-code.md`
-7. `docs/08-codex.md`
-8. `docs/09-claude-code-vs-codex.md`
-9. revisa los ejemplos de `examples/stacks/` si tu proyecto encaja con uno de ellos
-10. usa `checklists/` y `examples/deploys/` cuando vayas a desplegar
+1. `docs/10-donde-no-guardar-claves.md`
+2. `docs/11-cuando-no-desplegar.md`
+3. `docs/12-como-revertir.md`
+4. `docs/13-como-pedir-cambios-pequenos-a-la-ia.md`
+5. `docs/14-como-no-perder-la-base-de-datos.md`
+6. `docs/01-principios.md`
+7. `docs/02-seguridad-basica.md`
+8. `docs/03-backups.md`
+9. `docs/05-checklist-antes-de-desplegar.md`
+10. `docs/06-trabajar-con-ia-sin-romperlo-todo.md`
+11. `docs/07-claude-code.md`
+12. `docs/08-codex.md`
+13. `docs/09-claude-code-vs-codex.md`
+14. revisa los ejemplos de `examples/stacks/` si tu proyecto encaja con uno de ellos
+15. usa `checklists/` y `examples/deploys/` cuando vayas a desplegar
 
 ## Regla de oro
 
@@ -120,23 +132,27 @@ Si una app tiene usuarios, pagos, datos o acceso a APIs de terceros, nunca hagas
 ## Quick start
 
 1. clona o copia este repo
-2. rellena `templates/PROJECT_BRIEF.md`
-3. crea tu `.env` a partir de `examples/.env.example`
-4. define un método de backup antes de tocar producción
-5. usa `templates/PRE_DEPLOY_CHECKLIST.md` en cada deploy
-6. si trabajas con agentes, lee también `docs/07-claude-code.md`, `docs/08-codex.md` y `docs/09-claude-code-vs-codex.md`
+2. lee primero `docs/10-donde-no-guardar-claves.md`
+3. sigue con `docs/11-cuando-no-desplegar.md` y `docs/12-como-revertir.md`
+4. rellena `templates/PROJECT_BRIEF.md`
+5. crea tu `.env` a partir de `examples/.env.example`
+6. define un método de backup antes de tocar producción
+7. usa `templates/PRE_DEPLOY_CHECKLIST.md` en cada deploy
+8. si trabajas con agentes, lee también `docs/13-como-pedir-cambios-pequenos-a-la-ia.md`, `docs/07-claude-code.md`, `docs/08-codex.md` y `docs/09-claude-code-vs-codex.md`
 
 ## Qué NO intenta hacer este repo
 
 No intenta enseñarte a programar desde cero.
 No intenta ser un manual académico.
 No intenta cubrir todos los stacks.
+No intenta impresionarte con teoría que no te evita errores reales.
 
 Su trabajo es más simple:
 
 - ayudarte a no romper lo importante
 - darte criterio mínimo operativo
 - hacer que uses la IA con límites claros
+- enseñarte a frenar antes de un error caro
 
 ## Recomendación fuerte
 
