@@ -132,9 +132,10 @@ Menos "qué es una API" y más:
 
 - versión en inglés
 - ejemplos por stack (`React+Node`, `Next.js`, `n8n`, `Python`)
-- GitHub Action real para validar que no se suben secretos
+- reglas y automatización para evitar subir secretos al repositorio
 - carpeta `checklists/` con flujos por tipo de app
 - guía comparativa `Claude Code vs Codex`
+- ejemplos por tipo de despliegue y rollback
 
 ## Licencia
 
