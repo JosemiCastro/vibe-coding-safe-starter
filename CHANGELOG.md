@@ -13,6 +13,12 @@ Cambios relevantes de este repositorio.
 ### Fixed
 -
 
+## 0.3.0 — 2026-08-15
+
+### Added
+- skill compatible con Claude Code y Codex para aplicar el flujo seguro automáticamente
+- validación que mantiene sincronizadas ambas copias de `SKILL.md`
+
 ## 0.2.1 — 2026-08-15
 
 ### Fixed

@@ -26,6 +26,23 @@ cd vibe-coding-safe-starter
 4. antes de publicar, completa el [Pre-Deploy Checklist](./templates/PRE_DEPLOY_CHECKLIST.md)
 5. deja preparado el [Rollback Plan](./templates/ROLLBACK_PLAN.md)
 
+## También funciona como skill de Claude Code y Codex
+
+Si clonas el repositorio o lo usas como plantilla, ambos agentes detectan la misma guía de seguridad dentro del proyecto:
+
+| Agente | Ubicación |
+|---|---|
+| Claude Code | [`.claude/skills/vibe-coding-safe/SKILL.md`](./.claude/skills/vibe-coding-safe/SKILL.md) |
+| Codex | [`.agents/skills/vibe-coding-safe/SKILL.md`](./.agents/skills/vibe-coding-safe/SKILL.md) |
+
+Para un principiante no requiere configurar prompts largos:
+
+- en Claude Code, usa `/vibe-coding-safe`;
+- en Codex, menciona `$vibe-coding-safe` o selecciónala desde `/skills`;
+- ambos pueden activarla automáticamente al detectar una tarea de código, datos, secretos, backup o despliegue.
+
+La skill guía al agente para inspeccionar antes de editar, reducir el cambio, proteger secretos y datos, preparar rollback y verificar resultados reales. Sigue siendo una ayuda: debes revisar sus decisiones y resultados.
+
 ## Detente si ocurre cualquiera de estas cosas
 
 - no entiendes qué ha cambiado

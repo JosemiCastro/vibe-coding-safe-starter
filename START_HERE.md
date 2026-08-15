@@ -2,6 +2,8 @@
 
 No necesitas leer todo el repo ahora. Haz estas cinco cosas primero.
 
+> **Atajo con IA:** si has abierto este proyecto con Claude Code, usa `/vibe-coding-safe`. En Codex, menciona `$vibe-coding-safe` o selecciónala desde `/skills`. La skill te guiará, pero tú debes revisar sus decisiones y resultados.
+
 ## 1. Protege tus claves
 
 - usa `.env`

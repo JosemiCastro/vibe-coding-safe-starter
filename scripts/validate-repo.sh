@@ -11,6 +11,9 @@ required=(
   templates/ROLLBACK_PLAN.md templates/INCIDENT_REPORT.md
   scripts/backup-example.sh scripts/verify-backup-example.sh
   scripts/predeploy-check-example.sh scripts/test-scripts.sh
+  scripts/validate-skills.sh scripts/test-skills.sh
+  .claude/skills/vibe-coding-safe/SKILL.md
+  .agents/skills/vibe-coding-safe/SKILL.md
 )
 
 for path in "${required[@]}"; do
@@ -49,5 +52,7 @@ if broken:
     raise SystemExit(1)
 print('[ok] Enlaces Markdown locales válidos')
 PY
+
+"$ROOT/scripts/validate-skills.sh" || FAILED=1
 
 exit "$FAILED"

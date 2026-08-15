@@ -19,6 +19,8 @@ jobs:
         run: ./scripts/validate-repo.sh
       - name: Run functional script tests
         run: ./scripts/test-scripts.sh
+      - name: Test Claude Code and Codex skills
+        run: ./scripts/test-skills.sh
       - name: Check executable scripts
         run: |
           test -x scripts/backup-example.sh
@@ -26,3 +28,5 @@ jobs:
           test -x scripts/predeploy-check-example.sh
           test -x scripts/validate-repo.sh
           test -x scripts/test-scripts.sh
+          test -x scripts/validate-skills.sh
+          test -x scripts/test-skills.sh

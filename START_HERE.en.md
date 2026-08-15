@@ -2,6 +2,8 @@
 
 You do not need to read the whole repository now. Do these five things first.
 
+> **AI shortcut:** if you opened this project with Claude Code, use `/vibe-coding-safe`. In Codex, mention `$vibe-coding-safe` or select it from `/skills`. The skill will guide you, but you should review its decisions and results.
+
 ## 1. Protect your secrets
 
 - use `.env`

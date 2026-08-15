@@ -26,6 +26,23 @@ Have five minutes? Follow this route:
 4. complete the [Pre-Deploy Checklist](./templates/PRE_DEPLOY_CHECKLIST.md)
 5. prepare the [Rollback Plan](./templates/ROLLBACK_PLAN.md)
 
+## Also works as a Claude Code and Codex skill
+
+When you clone the repository or use it as a template, both agents discover the same safety workflow inside the project:
+
+| Agent | Location |
+|---|---|
+| Claude Code | [`.claude/skills/vibe-coding-safe/SKILL.md`](./.claude/skills/vibe-coding-safe/SKILL.md) |
+| Codex | [`.agents/skills/vibe-coding-safe/SKILL.md`](./.agents/skills/vibe-coding-safe/SKILL.md) |
+
+A beginner does not need to configure long prompts:
+
+- in Claude Code, use `/vibe-coding-safe`;
+- in Codex, mention `$vibe-coding-safe` or select it from `/skills`;
+- both can activate it automatically for tasks involving code, data, secrets, backups, or deployment.
+
+The skill guides the agent to inspect before editing, reduce scope, protect secrets and data, prepare rollback, and verify real results. It remains an aid: you should review its decisions and results.
+
 ## Stop if any of these is true
 
 - you do not understand what changed
