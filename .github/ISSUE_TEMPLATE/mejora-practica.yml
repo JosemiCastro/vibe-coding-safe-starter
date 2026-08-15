@@ -1,0 +1,32 @@
+name: Proponer mejora práctica
+description: Sugiere una mejora que ayude a principiantes a trabajar con más seguridad.
+title: "[Mejora] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema real
+      description: ¿Qué error o confusión intenta evitar?
+      placeholder: Un principiante podría...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Mejora propuesta
+      description: Describe el cambio concreto, no solo la teoría.
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Ejemplo práctico
+      description: Incluye un caso, checklist, plantilla o comando si aplica.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Seguridad
+      options:
+        - label: No he incluido claves, tokens ni datos privados.
+          required: true

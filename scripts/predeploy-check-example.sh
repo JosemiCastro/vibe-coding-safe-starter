@@ -1,69 +1,68 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Script orientativo de chequeo previo a deploy.
-# No decide por ti; te ayuda a detectar huecos básicos antes de publicar.
+# Chequeo local, no destructivo y sin dependencias externas.
+# Devuelve 1 si hay bloqueos y 0 si supera las comprobaciones básicas.
 
 APP_ROOT="${APP_ROOT:-$(pwd)}"
-EXIT_CODE=0
+BACKUP_MAX_AGE_HOURS="${BACKUP_MAX_AGE_HOURS:-24}"
+FAILURES=0
+WARNINGS=0
 
-ok() { echo "[ok] $*"; }
-warn() { echo "[warn] $*"; EXIT_CODE=1; }
-info() { echo "[info] $*"; }
+ok() { printf '[ok] %s\n' "$*"; }
+warn() { printf '[warn] %s\n' "$*"; WARNINGS=$((WARNINGS + 1)); }
+block() { printf '[block] %s\n' "$*"; FAILURES=$((FAILURES + 1)); }
 
-info "Revisando proyecto en $APP_ROOT"
+[ -d "$APP_ROOT" ] || { echo "[block] APP_ROOT no existe: $APP_ROOT"; exit 1; }
+printf '[info] Proyecto: %s\n' "$APP_ROOT"
 
-# Git limpio
 if git -C "$APP_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   if [ -n "$(git -C "$APP_ROOT" status --short)" ]; then
-    warn "Hay cambios sin commitear"
+    block "Hay cambios sin commit"
   else
     ok "Working tree limpio"
   fi
 else
-  warn "No parece un repo git"
+  block "No parece un repositorio git"
 fi
 
-# .env
-if [ -f "$APP_ROOT/.env" ]; then
-  ok ".env presente"
+[ -f "$APP_ROOT/.gitignore" ] && ok ".gitignore presente" || block "Falta .gitignore"
+
+if git -C "$APP_ROOT" ls-files --error-unmatch .env >/dev/null 2>&1; then
+  block ".env está versionado"
+elif [ -f "$APP_ROOT/.env" ]; then
+  ok ".env local presente y no versionado"
 else
-  warn "No existe .env en la raíz del proyecto"
+  warn "No existe .env local; puede ser normal en un repo guía"
 fi
 
-# Changelog
-if [ -f "$APP_ROOT/templates/CHANGELOG.md" ] || [ -f "$APP_ROOT/CHANGELOG.md" ]; then
-  ok "Existe changelog o plantilla de changelog"
+# Escanea solo archivos versionados para reducir falsos positivos.
+SECRET_REGEX='(OPENAI_API_KEY|GEMINI_API_KEY|ANTHROPIC_API_KEY|CLAUDE_API_KEY|DATABASE_URL|PASSWORD|SECRET|TOKEN)[[:space:]]*=[[:space:]]*[^[:space:]$<{][^[:space:]]{7,}'
+SECRET_HITS="$(git -C "$APP_ROOT" grep -nEI "$SECRET_REGEX" -- ':!*.md' ':!*.example' ':!scripts/predeploy-check-example.sh' 2>/dev/null || true)"
+if [ -n "$SECRET_HITS" ]; then
+  block "Posibles secretos hardcodeados en archivos versionados:"
+  printf '%s\n' "$SECRET_HITS"
 else
-  warn "No hay changelog visible"
+  ok "Sin patrones obvios de secretos en archivos versionados"
 fi
 
-# Secretos típicos trackeados
-MATCHES=$(grep -RInE "OPENAI_API_KEY=|GEMINI_API_KEY=|CLAUDE_API_KEY=|DATABASE_URL=postgres|AKIA[0-9A-Z]{16}" "$APP_ROOT" \
-  --exclude-dir=.git \
-  --exclude=.env \
-  --exclude=.env.example \
-  --exclude='*.md' \
-  --exclude='predeploy-check-example.sh' 2>/dev/null || true)
-if [ -n "$MATCHES" ]; then
-  warn "Posibles secretos o conexiones sensibles encontrados:"
-  echo "$MATCHES"
+if [ -f "$APP_ROOT/CHANGELOG.md" ] || [ -f "$APP_ROOT/templates/CHANGELOG.md" ]; then
+  ok "Changelog disponible"
 else
-  ok "No se detectan secretos típicos en archivos rastreados"
+  warn "No hay changelog"
 fi
 
-# Backups
-if [ -d "$APP_ROOT/backups" ]; then
-  ok "Existe directorio backups/"
+LATEST_BACKUP="$(find "$APP_ROOT/backups" -mindepth 1 -maxdepth 1 -type d -name 'backup-*' -printf '%T@ %p\n' 2>/dev/null | sort -nr | cut -d' ' -f2- | head -1 || true)"
+if [ -n "$LATEST_BACKUP" ]; then
+  AGE_HOURS=$(( ( $(date +%s) - $(stat -c %Y "$LATEST_BACKUP") ) / 3600 ))
+  if [ "$AGE_HOURS" -le "$BACKUP_MAX_AGE_HOURS" ]; then
+    ok "Backup reciente: $LATEST_BACKUP (${AGE_HOURS}h)"
+  else
+    block "Último backup demasiado antiguo: ${AGE_HOURS}h"
+  fi
 else
-  warn "No existe directorio backups/"
+  warn "No se encontró backup local; confirma que existe uno externo si el deploy toca datos"
 fi
 
-# Resumen
-if [ "$EXIT_CODE" -eq 0 ]; then
-  echo "\nResultado: checklist básica superada"
-else
-  echo "\nResultado: revisa los warnings antes de desplegar"
-fi
-
-exit "$EXIT_CODE"
+printf '\nResumen: %s bloqueo(s), %s aviso(s)\n' "$FAILURES" "$WARNINGS"
+[ "$FAILURES" -eq 0 ] || exit 1

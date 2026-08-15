@@ -3,6 +3,8 @@
 Rellena esto antes de pedir cambios grandes a una IA o antes del primer deploy serio.
 Si no puedes completar varias secciones, todavía te falta contexto para tocar producción con seguridad.
 
+Si no conoces un dato, escribe **“No lo sé todavía”**. Esa respuesta identifica una comprobación pendiente; no la inventes.
+
 ## 1. Identidad del proyecto
 - Nombre del proyecto:
 - Responsable actual:

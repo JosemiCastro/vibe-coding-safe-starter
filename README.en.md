@@ -1,175 +1,141 @@
 # Vibe Coding Safe Starter
 
+[![quality](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/quality.yml/badge.svg)](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/quality.yml)
 [![secret-scan](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/secret-scan.yml)
 
 [Versión en español](./README.md)
 
-A practical guide for people building software with AI without a strong programming background.
+A practical guide for building software with AI without breaking production, exposing secrets, or losing data.
 
-The goal is not to kill the fun of building.
-The goal is to help you avoid breaking production, losing data, or turning a quick prototype into unmanageable technical debt.
+This is not a basic programming theory course. It provides **operational judgment**, checklists, templates, and scripts for using Claude Code, Codex, and other coding agents with more control.
 
-## What problem this solves
+## Start here
 
-A lot of people are building with Claude, Codex, Gemini, and similar tools without a solid software foundation.
+Read it directly on GitHub or clone it:
 
-That speed is powerful, but it also creates very specific risks:
+```bash
+git clone https://github.com/JosemiCastro/vibe-coding-safe-starter.git
+cd vibe-coding-safe-starter
+```
 
-- changing production without understanding the impact
-- committing secrets to a repo
-- having no real backups
-- deploying without rollback
-- accepting huge refactors no one can maintain later
-- confusing speed with safety
+Have five minutes? Follow this route:
 
-This repo adds simple guardrails to reduce exactly that.
+1. open [START_HERE.en.md](./START_HERE.en.md)
+2. complete the [Project Brief](./templates/PROJECT_BRIEF.md)
+3. use the [safe prompt template](./examples/SAFE_PROMPT_TEMPLATE.md)
+4. complete the [Pre-Deploy Checklist](./templates/PRE_DEPLOY_CHECKLIST.md)
+5. prepare the [Rollback Plan](./templates/ROLLBACK_PLAN.md)
 
-## Who this is for
+## Stop if any of these is true
 
-- people using AI to build apps and automations
-- founders, marketers, operators, and non-technical builders shipping MVPs
-- small teams that need minimum rules before deploying
-- people who want to use Claude Code or Codex with judgment instead of blind trust
+- you do not understand what changed
+- AI touched more files than expected
+- real data is involved and you have no verified backup
+- you do not know how to return to the previous version
+- deploy is your only way to discover whether it works
 
-## What you will find here
+## Choose what you need
 
-- operational principles for building with AI without causing damage
-- concrete rules about where NOT to store secrets
-- clear criteria for when NOT to deploy
-- simple rollback and recovery guidance
-- how to ask AI for smaller changes
-- how not to lose your database
-- pre-deploy checklists
-- templates for documenting projects, changes, and incidents
-- specific guides for Claude Code and Codex
+| Need | Resource |
+|---|---|
+| Protect secrets | [Where NOT to store secrets](./docs/en/10-where-not-to-store-secrets.md) |
+| Decide whether to deploy | [When NOT to deploy](./docs/en/11-when-not-to-deploy.md) |
+| Prepare rollback | [How to roll back](./docs/en/12-how-to-roll-back.md) |
+| Ask AI for smaller changes | [How to ask AI for small changes](./docs/en/13-how-to-ask-ai-for-small-changes.md) |
+| Protect data | [How not to lose your database](./docs/en/14-how-not-to-lose-your-database.md) |
+| Use Claude Code | [Claude Code guide — Spanish](./docs/07-claude-code.md) |
+| Use Codex | [Codex guide — Spanish](./docs/08-codex.md) |
+| Choose an agent | [Claude Code vs Codex — Spanish](./docs/09-claude-code-vs-codex.md) |
 
-## Philosophy
+## Recommended safe flow
 
-If you are still learning to code, your biggest risk is not writing one bad function.
-Your biggest risk is this:
+```text
+Known-good state → small change → review → test → backup → deploy → validate
+        ↑                                                              ↓
+        └──────────────────────── rollback on failure ──────────────────┘
+```
 
-1. changing things without understanding impact
-2. having no backup
-3. putting secrets in code
-4. deploying without rollback
-5. accumulating undocumented changes
+1. save a known-good state in Git
+2. request one concrete change
+3. review affected files and risks
+4. test the exact case
+5. create and verify a backup when data is involved
+6. deploy with rollback prepared
+7. validate the main flow and logs
 
-This repo is designed to put simple rails around that.
+## Project checklists
 
-## Structure
+- [SaaS with users — Spanish](./checklists/saas-con-usuarios.md)
+- [Internal automation — Spanish](./checklists/automatizacion-interna.md)
+- [Landing or corporate site — Spanish](./checklists/landing-web.md)
+- [Admin dashboard — Spanish](./checklists/dashboard-admin.md)
+- [Admin panel and roles — Spanish](./checklists/panel-admin-y-roles.md)
+- [Payments and subscriptions — Spanish](./checklists/pagos-y-suscripciones.md)
+- [Database migration — Spanish](./checklists/migracion-base-de-datos.md)
+- [External API integration — Spanish](./checklists/api-externa.md)
 
-### Spanish docs
-- `docs/01-principios.md` — core rules for working with AI safely
-- `docs/02-seguridad-basica.md` — secrets, permissions, auth, and public exposure
-- `docs/03-backups.md` — what to back up, how often, and how to verify it
-- `docs/04-deuda-tecnica.md` — acceptable vs unacceptable technical debt
-- `docs/05-checklist-antes-de-desplegar.md` — short pre-deploy checklist
-- `docs/06-trabajar-con-ia-sin-romperlo-todo.md` — recommended workflow for AI-assisted changes
-- `docs/07-claude-code.md` — how to use Claude Code safely as a beginner
-- `docs/08-codex.md` — how to use Codex with limits and judgment
-- `docs/09-claude-code-vs-codex.md` — when to use Claude Code vs Codex
-- `docs/10-donde-no-guardar-claves.md` — where not to store secrets
-- `docs/11-cuando-no-desplegar.md` — when not to deploy
-- `docs/12-como-revertir.md` — how to roll back
-- `docs/13-como-pedir-cambios-pequenos-a-la-ia.md` — how to ask AI for small changes
-- `docs/14-como-no-perder-la-base-de-datos.md` — how not to lose your database
+## Realistic deploy and rollback cases
 
-### English operational docs
-- `docs/en/10-where-not-to-store-secrets.md`
-- `docs/en/11-when-not-to-deploy.md`
-- `docs/en/12-how-to-roll-back.md`
-- `docs/en/13-how-to-ask-ai-for-small-changes.md`
-- `docs/en/14-how-not-to-lose-your-database.md`
+- [Login broken after a change — Spanish](./examples/deploys/rollback-simple.md)
+- [Failed migration or database change — Spanish](./examples/deploys/rollback-db.md)
+- [Automation firing too often — Spanish](./examples/deploys/rollback-automatizacion.md)
+- [Broken landing page or form — Spanish](./examples/deploys/rollback-landing.md)
 
-The most important docs for a beginner are not the most theoretical ones.
-They are the ones that stop expensive mistakes on day one.
+## Stack examples
 
-### Templates
-- `templates/PROJECT_BRIEF.md` — operational brief with risks, environments, and rollback
-- `templates/PRE_DEPLOY_CHECKLIST.md` — reusable checklist with real deploy blockers
-- `templates/INCIDENT_REPORT.md` — incident template with cause, containment, and prevention
-- `templates/CHANGELOG.md` — visible, traceable changes useful for rollback
+- [React + Node + Postgres — Spanish](./examples/stacks/react-node.md)
+- [Next.js — Spanish](./examples/stacks/nextjs.md)
+- [n8n — Spanish](./examples/stacks/n8n.md)
+- [Python — Spanish](./examples/stacks/python.md)
 
-### Examples
-- `examples/.env.example` — safe environment variable example
-- `examples/SAFE_PROMPT_TEMPLATE.md` — template for asking AI for changes with proper context
-- `examples/stacks/react-node.md` — safe baseline for React + Node + Postgres
-- `examples/stacks/nextjs.md` — safe baseline for Next.js projects
-- `examples/stacks/n8n.md` — safe baseline for n8n workflows
-- `examples/stacks/python.md` — safe baseline for Python projects
-- `examples/deploys/rollback-simple.md` — realistic case: login or small change broken after deploy
-- `examples/deploys/rollback-db.md` — realistic case: database error after deploy
-- `examples/deploys/rollback-automatizacion.md` — realistic case: automation firing too often
-- `examples/deploys/rollback-landing.md` — realistic case: landing or form broken after release
+## Operational templates
 
-### Checklists
-- `checklists/saas-con-usuarios.md` — checklist for SaaS apps with users
-- `checklists/automatizacion-interna.md` — checklist for internal automations
-- `checklists/landing-web.md` — checklist for landing pages and public sites
-- `checklists/dashboard-admin.md` — checklist for admin dashboards
+- [Project Brief](./templates/PROJECT_BRIEF.md)
+- [Pre-Deploy Checklist](./templates/PRE_DEPLOY_CHECKLIST.md)
+- [Rollback Plan](./templates/ROLLBACK_PLAN.md)
+- [Incident Report](./templates/INCIDENT_REPORT.md)
+- [Changelog](./templates/CHANGELOG.md)
 
-### Scripts
-- `scripts/backup-example.sh` — operational backup example with manifest, compression, and PostgreSQL dump when available
-- `scripts/predeploy-check-example.sh` — example pre-deploy sanity check
+## Example scripts
 
-## Recommended reading order
+> These are educational examples. Read, adapt, and test them outside production.
 
-1. `docs/en/10-where-not-to-store-secrets.md`
-2. `docs/en/11-when-not-to-deploy.md`
-3. `docs/en/12-how-to-roll-back.md`
-4. `docs/en/13-how-to-ask-ai-for-small-changes.md`
-5. `docs/en/14-how-not-to-lose-your-database.md`
-6. `docs/07-claude-code.md`
-7. `docs/08-codex.md`
-8. `docs/09-claude-code-vs-codex.md`
-9. review `examples/stacks/` if one of them matches your project
-10. use `checklists/` and `examples/deploys/` before deploying
+```bash
+# Validate repository structure and shell syntax
+./scripts/validate-repo.sh
 
-## Golden rule
+# Create backup; .env is excluded by default
+APP_ROOT=/path/project BACKUP_ROOT=/external/path ./scripts/backup-example.sh
 
-If an app has users, payments, data, or third-party API access, never make direct production changes without:
+# Verify checksums and readability
+./scripts/verify-backup-example.sh /path/to/backup
 
-- a recent backup
-- a minimum changelog entry
-- variables in `.env`
-- a rollback plan
-- a basic functional test
+# Pre-deploy sanity check
+APP_ROOT=/path/project ./scripts/predeploy-check-example.sh
+```
 
-## Quick start
+## Security
 
-1. clone or copy this repo
-2. read `docs/en/10-where-not-to-store-secrets.md` first
-3. continue with `docs/en/11-when-not-to-deploy.md` and `docs/en/12-how-to-roll-back.md`
-4. fill in `templates/PROJECT_BRIEF.md`
-5. create your `.env` from `examples/.env.example`
-6. define a backup method before touching production
-7. use `templates/PRE_DEPLOY_CHECKLIST.md` on every deploy
-8. if you work with agents, also read `docs/en/13-how-to-ask-ai-for-small-changes.md`, `docs/07-claude-code.md`, `docs/08-codex.md`, and `docs/09-claude-code-vs-codex.md`
+- Gitleaks scans pushes and pull requests for secrets.
+- The `quality` workflow validates structure, local links, and Bash syntax.
+- Read [SECURITY.md](./SECURITY.md) before reporting an exposed secret or vulnerability.
 
-## What this repo does NOT try to do
+## Contributing
 
-It does not try to teach you programming from scratch.
-It does not try to be an academic manual.
-It does not try to cover every stack.
-It does not try to impress you with theory that will not prevent real mistakes.
+Contributions should solve a practical problem, include a verifiable example, and contain no secrets. Read [CONTRIBUTING.md](./CONTRIBUTING.md) and see published changes in [CHANGELOG.md](./CHANGELOG.md).
 
-Its job is simpler:
+## License
 
-- help you avoid breaking important things
-- give you minimum operational judgment
-- make AI-assisted building safer and more deliberate
-- teach you to stop before an expensive mistake
+MIT. See [LICENSE](./LICENSE).
 
 ## Strong recommendation
 
-If you are creating repos for people starting with vibe coding, this should be more about **operational judgment** than theory.
+A repository for vibe coding beginners should prioritize **operational judgment** over theory.
 
-Less:
-- “what is an API?”
+Less “what is an API?” and more:
 
-More:
-- where NOT to store keys
-- when NOT to deploy
+- where **NOT** to store secrets
+- when **NOT** to deploy
 - how to roll back
 - how to ask AI for smaller changes
 - how not to lose your database

@@ -1,86 +1,110 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Ejemplo operativo de backup para proyectos pequeños.
-# No sustituye una estrategia profesional, pero es mucho más útil que una plantilla vacía.
-# Qué hace:
-# 1) crea carpeta de backup con timestamp
-# 2) guarda manifiesto básico
-# 3) intenta exportar .env si existe
-# 4) intenta dump PostgreSQL si hay config y pg_dump disponible
-# 5) comprime archivos del proyecto sin basura típica
-# 6) deja un resumen final
+# Backup operativo para proyectos pequeños.
+# - Archivos del proyecto (sin secretos comunes ni dependencias)
+# - Dump PostgreSQL opcional
+# - Manifiesto y checksums SHA-256
+#
+# Uso:
+#   APP_ROOT=/ruta/proyecto BACKUP_ROOT=/ruta/externa ./scripts/backup-example.sh
+#
+# Opcional:
+#   DATABASE_URL=postgresql://...   # activa pg_dump si está instalado
+#   BACKUP_ENV=true                # copia .env bajo responsabilidad del usuario
 
 DATE="$(date +%F-%H%M%S)"
-APP_ROOT="${APP_ROOT:-$(pwd)}"
-BACKUP_ROOT="${BACKUP_ROOT:-$APP_ROOT/backups}"
+RAW_APP_ROOT="${APP_ROOT:-$(pwd)}"
+RAW_BACKUP_ROOT="${BACKUP_ROOT:-$RAW_APP_ROOT/backups}"
+BACKUP_ENV="${BACKUP_ENV:-false}"
 BACKUP_NAME="backup-$DATE"
-BACKUP_DIR="$BACKUP_ROOT/$BACKUP_NAME"
-FILES_ARCHIVE="$BACKUP_DIR/app-files-$DATE.tar.gz"
-MANIFEST="$BACKUP_DIR/manifest.txt"
 
-mkdir -p "$BACKUP_DIR"
-
-info() { echo "[info] $*"; }
-warn() { echo "[warn] $*"; }
-fail() { echo "[error] $*"; exit 1; }
+info() { printf '[info] %s\n' "$*"; }
+warn() { printf '[warn] %s\n' "$*" >&2; }
+fail() { printf '[error] %s\n' "$*" >&2; exit 1; }
 
 command -v tar >/dev/null 2>&1 || fail "tar no está disponible"
+command -v sha256sum >/dev/null 2>&1 || fail "sha256sum no está disponible"
+command -v realpath >/dev/null 2>&1 || fail "realpath no está disponible"
 
-info "APP_ROOT=$APP_ROOT"
-info "BACKUP_DIR=$BACKUP_DIR"
+APP_ROOT="$(realpath -m "$RAW_APP_ROOT")"
+BACKUP_ROOT="$(realpath -m "$RAW_BACKUP_ROOT")"
+BACKUP_DIR="$BACKUP_ROOT/$BACKUP_NAME"
+FILES_ARCHIVE="$BACKUP_DIR/app-files-$DATE.tar.gz"
+DB_DUMP="$BACKUP_DIR/postgres-$DATE.dump"
+MANIFEST="$BACKUP_DIR/manifest.txt"
+CHECKSUMS="$BACKUP_DIR/SHA256SUMS"
+
+[ -d "$APP_ROOT" ] || fail "APP_ROOT no existe: $APP_ROOT"
+
+if [[ "$BACKUP_ROOT" == "$APP_ROOT"/* ]] && [ "$BACKUP_ROOT" != "$APP_ROOT/backups" ]; then
+  fail "BACKUP_ROOT dentro del proyecto debe ser $APP_ROOT/backups o una ruta externa"
+fi
+
+mkdir -p "$BACKUP_ROOT"
+mkdir "$BACKUP_DIR" || fail "Ya existe un backup con el mismo timestamp: $BACKUP_DIR"
+chmod 700 "$BACKUP_DIR"
+
+info "Proyecto: $APP_ROOT"
+info "Destino: $BACKUP_DIR"
 
 {
   echo "backup_name=$BACKUP_NAME"
   echo "created_at=$(date --iso-8601=seconds)"
   echo "app_root=$APP_ROOT"
   echo "hostname=$(hostname 2>/dev/null || echo unknown)"
-  echo "git_commit=$(git -C "$APP_ROOT" rev-parse --short HEAD 2>/dev/null || echo no-git)"
+  echo "git_commit=$(git -C "$APP_ROOT" rev-parse HEAD 2>/dev/null || echo no-git)"
+  echo "environment_file_included=false"
+  echo "database_dump=false"
 } > "$MANIFEST"
 
-# Guardar .env si existe
-if [ -f "$APP_ROOT/.env" ]; then
+# .env se excluye siempre del archivo general. Solo se copia con opt-in explícito.
+if [ "$BACKUP_ENV" = "true" ] && [ -f "$APP_ROOT/.env" ]; then
   cp "$APP_ROOT/.env" "$BACKUP_DIR/.env.backup"
-  info "Copia de .env guardada en $BACKUP_DIR/.env.backup"
-else
-  warn "No existe $APP_ROOT/.env"
+  chmod 600 "$BACKUP_DIR/.env.backup"
+  sed -i 's/environment_file_included=false/environment_file_included=true/' "$MANIFEST"
+  warn "Se ha incluido .env por petición explícita. Protege y mueve esta copia."
 fi
 
-# Export PostgreSQL si hay configuración suficiente
-DB_DUMP_DONE=false
+# Dump PostgreSQL en formato custom, más adecuado para restaurar con pg_restore.
 if command -v pg_dump >/dev/null 2>&1; then
   if [ -n "${DATABASE_URL:-}" ]; then
-    info "Generando dump PostgreSQL desde DATABASE_URL"
-    if pg_dump "$DATABASE_URL" > "$BACKUP_DIR/postgres-$DATE.sql"; then
-      DB_DUMP_DONE=true
-      info "Dump PostgreSQL guardado en $BACKUP_DIR/postgres-$DATE.sql"
+    info "Generando dump PostgreSQL"
+    if PGDATABASE="$DATABASE_URL" pg_dump --format=custom --file="$DB_DUMP"; then
+      chmod 600 "$DB_DUMP"
+      sed -i 's/database_dump=false/database_dump=true/' "$MANIFEST"
+      info "Dump generado: $DB_DUMP"
     else
-      warn "pg_dump con DATABASE_URL falló"
-      rm -f "$BACKUP_DIR/postgres-$DATE.sql"
+      rm -f "$DB_DUMP"
+      warn "pg_dump falló; el backup continuará sin base de datos"
     fi
   elif [ -n "${PGHOST:-}" ] && [ -n "${PGDATABASE:-}" ] && [ -n "${PGUSER:-}" ]; then
-    info "Generando dump PostgreSQL usando variables PG*"
-    if pg_dump > "$BACKUP_DIR/postgres-$DATE.sql"; then
-      DB_DUMP_DONE=true
-      info "Dump PostgreSQL guardado en $BACKUP_DIR/postgres-$DATE.sql"
+    info "Generando dump PostgreSQL con variables PG*"
+    if pg_dump --format=custom --file="$DB_DUMP"; then
+      chmod 600 "$DB_DUMP"
+      sed -i 's/database_dump=false/database_dump=true/' "$MANIFEST"
     else
-      warn "pg_dump con variables PG* falló"
-      rm -f "$BACKUP_DIR/postgres-$DATE.sql"
+      rm -f "$DB_DUMP"
+      warn "pg_dump falló; el backup continuará sin base de datos"
     fi
   else
-    warn "No hay DATABASE_URL ni variables PG* suficientes para dump"
+    warn "Sin DATABASE_URL o variables PG*: se omite PostgreSQL"
   fi
 else
-  warn "pg_dump no está instalado; se omite backup de PostgreSQL"
+  warn "pg_dump no está instalado: se omite PostgreSQL"
 fi
 
-echo "database_dump=$DB_DUMP_DONE" >> "$MANIFEST"
-
-# Comprimir archivos del proyecto
-info "Comprimiendo archivos del proyecto"
-tar -czf "$FILES_ARCHIVE" \
-  -C "$APP_ROOT" . \
+info "Comprimiendo archivos sin secretos comunes, dependencias ni artefactos"
+tar \
   --exclude='./.git' \
+  --exclude='./.env' \
+  --exclude='./.env.*' \
+  --exclude='./.envrc' \
+  --exclude='./.npmrc' \
+  --exclude='./.pypirc' \
+  --exclude='./.netrc' \
+  --exclude='*.pem' \
+  --exclude='*.key' \
   --exclude='./node_modules' \
   --exclude='./.next' \
   --exclude='./dist' \
@@ -89,31 +113,33 @@ tar -czf "$FILES_ARCHIVE" \
   --exclude='./backups' \
   --exclude='./.venv' \
   --exclude='./venv' \
-  --exclude='./__pycache__'
+  --exclude='./__pycache__' \
+  -czf "$FILES_ARCHIVE" \
+  -C "$APP_ROOT" .
+chmod 600 "$FILES_ARCHIVE"
 
-info "Archivo comprimido generado: $FILES_ARCHIVE"
+(
+  cd "$BACKUP_DIR"
+  sha256sum "$(basename "$FILES_ARCHIVE")" > "$CHECKSUMS"
+  [ ! -f "$(basename "$DB_DUMP")" ] || sha256sum "$(basename "$DB_DUMP")" >> "$CHECKSUMS"
+  [ ! -f .env.backup ] || sha256sum .env.backup >> "$CHECKSUMS"
+)
 
-# Añadir tamaños al manifiesto
 {
-  echo "files_archive=$FILES_ARCHIVE"
+  echo "files_archive=$(basename "$FILES_ARCHIVE")"
   echo "files_archive_size=$(du -h "$FILES_ARCHIVE" | cut -f1)"
-  if [ -f "$BACKUP_DIR/postgres-$DATE.sql" ]; then
-    echo "postgres_dump=$BACKUP_DIR/postgres-$DATE.sql"
-    echo "postgres_dump_size=$(du -h "$BACKUP_DIR/postgres-$DATE.sql" | cut -f1)"
-  fi
+  echo "checksums=$(basename "$CHECKSUMS")"
 } >> "$MANIFEST"
 
-info "Backup completado"
-echo
 cat <<EOF
-Resumen:
+
+Backup completado:
 - carpeta: $BACKUP_DIR
 - manifiesto: $MANIFEST
-- archivos: $FILES_ARCHIVE
-- dump DB: $DB_DUMP_DONE
+- checksums: $CHECKSUMS
 
-Siguiente paso recomendado:
-1. mover esta copia fuera del servidor principal
-2. anotar dónde quedó guardada
-3. probar restauración en entorno aparte
+Siguiente paso obligatorio:
+1. ejecuta scripts/verify-backup-example.sh "$BACKUP_DIR"
+2. mueve la copia fuera del servidor principal
+3. prueba una restauración en un entorno aparte
 EOF

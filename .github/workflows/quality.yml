@@ -1,0 +1,28 @@
+name: quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Validate repository structure and shell syntax
+        run: ./scripts/validate-repo.sh
+      - name: Run functional script tests
+        run: ./scripts/test-scripts.sh
+      - name: Check executable scripts
+        run: |
+          test -x scripts/backup-example.sh
+          test -x scripts/verify-backup-example.sh
+          test -x scripts/predeploy-check-example.sh
+          test -x scripts/validate-repo.sh
+          test -x scripts/test-scripts.sh

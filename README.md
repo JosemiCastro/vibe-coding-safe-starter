@@ -1,176 +1,141 @@
 # Vibe Coding Safe Starter
 
+[![quality](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/quality.yml/badge.svg)](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/quality.yml)
 [![secret-scan](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/secret-scan.yml)
 
 [English version](./README.en.md)
 
-Guía práctica para gente que empieza a construir software con IA sin base fuerte de programación.
+Guía práctica para construir software con IA sin romper producción, filtrar claves o perder datos.
 
-La idea no es quitarte las ganas de crear.
-La idea es que no rompas producción, no pierdas datos y no conviertas un prototipo en una bola de deuda imposible de mantener.
+No intenta enseñarte teoría básica de programación. Te da **criterio operativo**, checklists, plantillas y scripts para trabajar con Claude Code, Codex y otros agentes con más control.
 
-## Qué problema resuelve
+## Empieza aquí
 
-Muchísima gente está construyendo con Claude, Codex, Gemini o herramientas parecidas sin una base sólida de desarrollo.
+Puedes leerlo directamente en GitHub o clonarlo:
 
-Eso acelera muchísimo, pero también abre riesgos muy concretos:
+```bash
+git clone https://github.com/JosemiCastro/vibe-coding-safe-starter.git
+cd vibe-coding-safe-starter
+```
 
-- tocar producción sin entender impacto
-- subir secretos al repo
-- no tener backup real
-- desplegar sin rollback
-- aceptar refactors enormes que luego nadie sabe mantener
-- mezclar velocidad con seguridad
+¿Tienes cinco minutos? Sigue esta ruta:
 
-Este repo pone barandillas simples para reducir justo eso.
+1. abre [START_HERE.md](./START_HERE.md)
+2. completa el [Project Brief](./templates/PROJECT_BRIEF.md)
+3. usa la [plantilla de prompt seguro](./examples/SAFE_PROMPT_TEMPLATE.md)
+4. antes de publicar, completa el [Pre-Deploy Checklist](./templates/PRE_DEPLOY_CHECKLIST.md)
+5. deja preparado el [Rollback Plan](./templates/ROLLBACK_PLAN.md)
 
-## Para quién es
+## Detente si ocurre cualquiera de estas cosas
 
-- gente que usa IA para construir apps y automatizaciones
-- founders, marketers, operators o perfiles no técnicos sacando MVPs
-- equipos pequeños que necesitan reglas mínimas antes de desplegar
-- personas que quieren usar Claude Code o Codex con criterio, no a ciegas
+- no entiendes qué ha cambiado
+- la IA ha tocado más archivos de los esperados
+- hay datos reales y no tienes backup verificado
+- no sabes volver a la versión anterior
+- el deploy es tu única forma de saber si funciona
 
-## Qué encontrarás aquí
+## Elige lo que necesitas
 
-- principios operativos para construir con IA sin liarla
-- reglas concretas sobre dónde NO guardar claves
-- criterios claros sobre cuándo NO desplegar
-- guías simples para rollback y reversión
-- cómo pedir cambios pequeños a la IA
-- cómo no perder la base de datos
-- checklist de predeploy
-- plantillas para documentar proyectos, cambios e incidentes
-- guías específicas para trabajar con Claude Code y Codex
+| Necesidad | Recurso |
+|---|---|
+| Proteger claves | [Dónde NO guardar claves](./docs/10-donde-no-guardar-claves.md) |
+| Decidir si desplegar | [Cuándo NO desplegar](./docs/11-cuando-no-desplegar.md) |
+| Preparar una vuelta atrás | [Cómo revertir](./docs/12-como-revertir.md) |
+| Pedir cambios pequeños | [Cómo pedir cambios a la IA](./docs/13-como-pedir-cambios-pequenos-a-la-ia.md) |
+| Proteger datos | [Cómo no perder la base de datos](./docs/14-como-no-perder-la-base-de-datos.md) |
+| Usar Claude Code | [Guía de Claude Code](./docs/07-claude-code.md) |
+| Usar Codex | [Guía de Codex](./docs/08-codex.md) |
+| Elegir agente | [Claude Code vs Codex](./docs/09-claude-code-vs-codex.md) |
 
-## Filosofía
+## Flujo seguro recomendado
 
-Si no sabes programar bien todavía, tu mayor riesgo no es escribir mal una función.
-Tu mayor riesgo es este:
+```text
+Estado bueno → cambio pequeño → revisión → prueba → backup → deploy → validación
+       ↑                                                               ↓
+       └──────────────────────── rollback si falla ─────────────────────┘
+```
 
-1. tocar algo sin entender impacto
-2. no tener backup
-3. meter secretos en código
-4. desplegar sin rollback
-5. acumular cambios sin documentación
+1. guarda un estado bueno con Git
+2. pide una sola modificación concreta
+3. revisa archivos afectados y riesgos
+4. prueba el caso exacto
+5. crea y verifica backup si toca datos
+6. despliega con rollback preparado
+7. valida el flujo principal y los logs
 
-Este repo intenta poner barandillas simples para evitar eso.
+## Checklists por tipo de proyecto
 
-## Estructura
+- [SaaS con usuarios](./checklists/saas-con-usuarios.md)
+- [Automatización interna](./checklists/automatizacion-interna.md)
+- [Landing o web corporativa](./checklists/landing-web.md)
+- [Dashboard admin](./checklists/dashboard-admin.md)
+- [Panel admin y roles](./checklists/panel-admin-y-roles.md)
+- [Pagos y suscripciones](./checklists/pagos-y-suscripciones.md)
+- [Migración de base de datos](./checklists/migracion-base-de-datos.md)
+- [Integración con API externa](./checklists/api-externa.md)
 
-### Docs
-- `docs/01-principios.md` — reglas base para trabajar con IA sin liarla
-- `docs/02-seguridad-basica.md` — secretos, permisos, auth y exposición pública
-- `docs/03-backups.md` — qué guardar, con qué frecuencia y cómo comprobarlo
-- `docs/04-deuda-tecnica.md` — qué deuda aceptar y cuál no
-- `docs/05-checklist-antes-de-desplegar.md` — checklist corto de predeploy
-- `docs/06-trabajar-con-ia-sin-romperlo-todo.md` — flujo recomendado de cambios con IA
-- `docs/07-claude-code.md` — cómo usar Claude Code con seguridad si estás empezando
-- `docs/08-codex.md` — cómo usar Codex con límites y criterio
-- `docs/09-claude-code-vs-codex.md` — cuándo usar Claude Code y cuándo usar Codex
-- `docs/10-donde-no-guardar-claves.md` — errores típicos al gestionar secretos
-- `docs/11-cuando-no-desplegar.md` — señales claras para frenar un deploy
-- `docs/12-como-revertir.md` — rollback simple para gente no técnica
-- `docs/13-como-pedir-cambios-pequenos-a-la-ia.md` — cómo trocear cambios para no romper la app
-- `docs/14-como-no-perder-la-base-de-datos.md` — reglas mínimas para no cargarte la DB
-- `docs/en/10-where-not-to-store-secrets.md` — English version: where not to store secrets
-- `docs/en/11-when-not-to-deploy.md` — English version: when not to deploy
-- `docs/en/12-how-to-roll-back.md` — English version: how to roll back
-- `docs/en/13-how-to-ask-ai-for-small-changes.md` — English version: how to ask AI for small changes
-- `docs/en/14-how-not-to-lose-your-database.md` — English version: how not to lose your database
+## Casos prácticos de deploy y rollback
 
-Los docs más importantes para un principiante no son los más teóricos.
-Son los que te evitan errores caros el primer día.
+- [Login roto después de un cambio](./examples/deploys/rollback-simple.md)
+- [Migración o base de datos fallida](./examples/deploys/rollback-db.md)
+- [Automatización disparando de más](./examples/deploys/rollback-automatizacion.md)
+- [Landing o formulario roto](./examples/deploys/rollback-landing.md)
 
-### Templates
-- `templates/PROJECT_BRIEF.md` — briefing operativo con riesgos, entornos y rollback
-- `templates/PRE_DEPLOY_CHECKLIST.md` — checklist reusable con bloqueos reales de deploy
-- `templates/INCIDENT_REPORT.md` — para documentar errores serios con causa, contención y prevención
-- `templates/CHANGELOG.md` — cambios visibles, trazables y útiles para rollback
+## Ejemplos por stack
 
-### Examples
-- `examples/.env.example` — ejemplo seguro de variables de entorno
-- `examples/SAFE_PROMPT_TEMPLATE.md` — plantilla para pedir cambios a la IA con contexto
-- `examples/stacks/react-node.md` — base segura para React + Node + Postgres
-- `examples/stacks/nextjs.md` — base segura para proyectos Next.js
-- `examples/stacks/n8n.md` — base segura para workflows n8n
-- `examples/stacks/python.md` — base segura para proyectos Python
-- `examples/deploys/rollback-simple.md` — caso realista: login o cambio pequeño roto tras deploy
-- `examples/deploys/rollback-db.md` — caso realista: despliegue con error de base de datos
-- `examples/deploys/rollback-automatizacion.md` — caso realista: automatización disparando de más
-- `examples/deploys/rollback-landing.md` — caso realista: landing o formulario roto tras publicar
+- [React + Node + Postgres](./examples/stacks/react-node.md)
+- [Next.js](./examples/stacks/nextjs.md)
+- [n8n](./examples/stacks/n8n.md)
+- [Python](./examples/stacks/python.md)
 
-### Checklists
-- `checklists/saas-con-usuarios.md` — checklist para SaaS con usuarios
-- `checklists/automatizacion-interna.md` — checklist para automatizaciones internas
-- `checklists/landing-web.md` — checklist para landings y webs públicas
-- `checklists/dashboard-admin.md` — checklist para dashboards admin
+## Plantillas operativas
 
-### Scripts
-- `scripts/backup-example.sh` — backup operativo con manifiesto, compresión y dump PostgreSQL si está disponible
-- `scripts/predeploy-check-example.sh` — chequeo orientativo antes de desplegar
+- [Project Brief](./templates/PROJECT_BRIEF.md)
+- [Pre-Deploy Checklist](./templates/PRE_DEPLOY_CHECKLIST.md)
+- [Rollback Plan](./templates/ROLLBACK_PLAN.md)
+- [Incident Report](./templates/INCIDENT_REPORT.md)
+- [Changelog](./templates/CHANGELOG.md)
 
-## Orden recomendado de lectura
+## Scripts de ejemplo
 
-1. `docs/10-donde-no-guardar-claves.md`
-2. `docs/11-cuando-no-desplegar.md`
-3. `docs/12-como-revertir.md`
-4. `docs/13-como-pedir-cambios-pequenos-a-la-ia.md`
-5. `docs/14-como-no-perder-la-base-de-datos.md`
-6. `docs/01-principios.md`
-7. `docs/02-seguridad-basica.md`
-8. `docs/03-backups.md`
-9. `docs/05-checklist-antes-de-desplegar.md`
-10. `docs/06-trabajar-con-ia-sin-romperlo-todo.md`
-11. `docs/07-claude-code.md`
-12. `docs/08-codex.md`
-13. `docs/09-claude-code-vs-codex.md`
-14. revisa los ejemplos de `examples/stacks/` si tu proyecto encaja con uno de ellos
-15. usa `checklists/` y `examples/deploys/` cuando vayas a desplegar
+> Son ejemplos educativos. Léelos, adáptalos y pruébalos fuera de producción.
 
-## Regla de oro
+```bash
+# Comprobar estructura y scripts del repo
+./scripts/validate-repo.sh
 
-Si una app tiene usuarios, pagos, datos o acceso a APIs de terceros, nunca hagas cambios directos en producción sin:
+# Crear backup; excluye .env por defecto
+APP_ROOT=/ruta/proyecto BACKUP_ROOT=/ruta/externa ./scripts/backup-example.sh
 
-- copia de seguridad reciente
-- changelog mínimo
-- variables en `.env`
-- plan de rollback
-- prueba funcional básica
+# Verificar checksums y legibilidad
+./scripts/verify-backup-example.sh /ruta/al/backup
 
-## Quick start
+# Chequeo previo a deploy
+APP_ROOT=/ruta/proyecto ./scripts/predeploy-check-example.sh
+```
 
-1. clona o copia este repo
-2. lee primero `docs/10-donde-no-guardar-claves.md`
-3. sigue con `docs/11-cuando-no-desplegar.md` y `docs/12-como-revertir.md`
-4. rellena `templates/PROJECT_BRIEF.md`
-5. crea tu `.env` a partir de `examples/.env.example`
-6. define un método de backup antes de tocar producción
-7. usa `templates/PRE_DEPLOY_CHECKLIST.md` en cada deploy
-8. si trabajas con agentes, lee también `docs/13-como-pedir-cambios-pequenos-a-la-ia.md`, `docs/07-claude-code.md`, `docs/08-codex.md` y `docs/09-claude-code-vs-codex.md`
+## Seguridad
 
-## Qué NO intenta hacer este repo
+- Gitleaks revisa secretos en pushes y pull requests.
+- El workflow `quality` valida estructura, enlaces locales y sintaxis Bash.
+- Consulta [SECURITY.md](./SECURITY.md) antes de reportar una clave o vulnerabilidad.
 
-No intenta enseñarte a programar desde cero.
-No intenta ser un manual académico.
-No intenta cubrir todos los stacks.
-No intenta impresionarte con teoría que no te evita errores reales.
+## Contribuir
 
-Su trabajo es más simple:
+Las contribuciones deben resolver un problema práctico, incluir un ejemplo verificable y no contener secretos. Lee [CONTRIBUTING.md](./CONTRIBUTING.md) y consulta los cambios publicados en [CHANGELOG.md](./CHANGELOG.md).
 
-- ayudarte a no romper lo importante
-- darte criterio mínimo operativo
-- hacer que uses la IA con límites claros
-- enseñarte a frenar antes de un error caro
+## Licencia
+
+MIT. Consulta [LICENSE](./LICENSE).
 
 ## Recomendación fuerte
 
 Si vas a crear repos para principiantes de vibe coding, este repo debería ser más de **criterio operativo** que de teoría.
 
-Menos "qué es una API" y más:
+Menos “qué es una API” y más:
 
-- dónde NO guardar claves
-- cuándo NO desplegar
+- dónde **NO** guardar claves
+- cuándo **NO** desplegar
 - cómo revertir
 - cómo pedir cambios pequeños a la IA
 - cómo no perder la base de datos

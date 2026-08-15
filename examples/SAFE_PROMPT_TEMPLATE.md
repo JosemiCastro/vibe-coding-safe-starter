@@ -1,32 +1,67 @@
 # Plantilla segura para pedir cambios a una IA
 
-Quiero hacer un cambio en este proyecto.
+Copia, rellena y envía primero la **fase 1**. No autorices cambios hasta entender el plan.
 
-## Contexto
-- Stack:
-- Entorno:
-- Archivos implicados:
-- Qué hace ahora:
-- Qué quiero que haga:
+## Fase 1 — inspeccionar sin modificar
 
-## Restricciones
-- No tocar archivos fuera de:
-- No cambiar auth / pagos / base de datos salvo que sea imprescindible
-- No meter secretos en código
-- Explica riesgos antes de proponer cambios
+```text
+Analiza este proyecto sin modificar archivos ni ejecutar deploys.
 
-## Lo que necesito de ti
-1. Resume el cambio
-2. Lista archivos a tocar
-3. Explica riesgos
-4. Propón cambios pequeños
-5. Di cómo probarlo
-6. Di cómo revertirlo
+Contexto:
+- stack: [React / Node / Python / n8n / otro]
+- entorno: [local / staging / producción]
+- problema concreto: [una frase]
+- comportamiento actual: [qué ocurre]
+- resultado esperado: [qué debería ocurrir]
 
-## Formato de respuesta
-- Resumen
-- Archivos afectados
-- Riesgos
-- Implementación propuesta
-- Validación
-- Rollback
+Alcance permitido:
+- archivos o zona: [lista]
+
+No tocar sin autorización:
+- autenticación
+- pagos
+- base de datos y migraciones
+- variables de entorno
+- infraestructura o deploy
+- archivos fuera del alcance
+
+Devuélveme antes de cambiar nada:
+1. causa probable
+2. archivos que propones tocar
+3. cambio mínimo
+4. riesgos
+5. cómo probarlo
+6. cómo revertirlo
+7. dudas o supuestos
+```
+
+## Fase 2 — autorizar un cambio pequeño
+
+Solo después de revisar la fase 1:
+
+```text
+Autorizo únicamente el cambio mínimo descrito en [archivo/zona].
+
+Restricciones:
+- no amplíes el alcance
+- no refactorices código no relacionado
+- no instales dependencias sin pedir permiso
+- no ejecutes deploy, migraciones ni comandos destructivos
+- no introduzcas secretos
+
+Al terminar, devuelve:
+1. resumen
+2. archivos modificados
+3. pruebas ejecutadas y resultado real
+4. riesgos pendientes
+5. rollback exacto
+```
+
+## Señales para detener la tarea
+
+Detén y pregunta si:
+- necesitas tocar más archivos
+- aparece auth, pagos o datos reales
+- falta contexto o acceso
+- una prueba requiere producción
+- el rollback no está claro

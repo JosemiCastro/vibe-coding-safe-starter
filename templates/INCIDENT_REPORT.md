@@ -1,49 +1,65 @@
 # Incident Report
 
-Completa esto cuando algo se rompa de verdad.
-La idea no es buscar culpables: es dejar una traza útil para no repetir el mismo error.
+Completa esto cuando algo se rompa. El objetivo es recuperar servicio, entender la causa y evitar repetirla; no buscar culpables.
 
 ## 1. Resumen
 - Fecha:
 - Responsable:
 - Proyecto:
-- Entorno afectado:
+- Entorno:
+- Estado: investigando / contenido / resuelto
 - Incidente en una frase:
 
-## 2. Impacto
+## 2. Severidad e impacto
+- Severidad: baja / media / alta / crítica
 - Qué dejó de funcionar:
 - A quién afectó:
-- Hubo pérdida de datos: sí / no / no confirmado
-- Hubo impacto económico o comercial: sí / no / no confirmado
+- Inicio aproximado:
+- Fin aproximado:
+- Pérdida de datos: no / sí / sin confirmar
+- Impacto económico o comercial: no / sí / sin confirmar
 
-## 3. Detección
+## 3. Línea temporal
+| Hora | Evento o acción | Resultado |
+|---|---|---|
+| | | |
+
+## 4. Detección y evidencia
 - Cómo se detectó:
-- Hora aproximada de inicio:
-- Hora aproximada de contención:
-- Logs, alertas o evidencias clave:
+- Logs o alertas relevantes:
+- Métrica o flujo que confirmó recuperación:
 
-## 4. Causa probable
-- Qué cambio lo provocó:
-- Era cambio manual, IA, deploy, migración o automatización:
-- Qué señal se ignoró antes del fallo:
+> No copies tokens, contraseñas, datos personales ni cadenas de conexión.
 
-## 5. Contención
-- Qué se hizo primero para frenar el problema:
-- Se pausó algo: sí / no
-- Se hizo rollback: sí / no
-- Se restauró backup: sí / no
+## 5. Causa
+- Cambio que lo provocó:
+- Tipo: manual / IA / deploy / migración / automatización
+- Causa raíz confirmada o hipótesis:
+- Señal ignorada antes del fallo:
 
-## 6. Resolución
-- Qué devolvió el sistema a estado funcional:
-- Qué quedó pendiente después de recuperar servicio:
+## 6. Contención
+- Qué se pausó:
+- Rollback realizado:
+- Backup restaurado:
+- Efectos externos revisados:
 
-## 7. Lecciones operativas
-- Qué no se debería haber hecho así:
-- Qué control faltaba:
-- Qué checklist, script o validación habría evitado esto:
+## 7. Recuperación verificada
+- [ ] la app responde
+- [ ] login funciona si aplica
+- [ ] flujo principal funciona
+- [ ] lectura y escritura de datos funcionan
+- [ ] logs sin errores críticos nuevos
+- [ ] automatizaciones controladas
 
-## 8. Acción preventiva
-- Cambio preventivo 1:
-- Cambio preventivo 2:
-- Responsable:
-- Fecha objetivo:
+## 8. Comunicación
+- A quién se informó:
+- Qué se comunicó:
+- Hace falta seguimiento: sí / no
+
+## 9. Acciones preventivas
+| Acción | Responsable | Fecha objetivo | Estado |
+|---|---|---|---|
+| | | | pendiente |
+
+## 10. Lección operativa
+- Qué checklist, prueba, script o límite habría evitado el incidente:

@@ -1,0 +1,43 @@
+name: Corregir contenido o script
+description: Informa de una instrucción confusa, peligrosa o que no funciona.
+title: "[Corrección] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - README
+        - Documentación
+        - Checklist
+        - Template
+        - Script
+        - GitHub Action
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: Qué está mal
+      description: Explica qué instrucción falla, confunde o puede ser peligrosa.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Qué debería ocurrir
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidencia sin secretos
+      description: Pega salida redactada. Nunca incluyas tokens o datos privados.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Confirmación
+      options:
+        - label: He eliminado secretos y datos privados.
+          required: true
