@@ -85,10 +85,10 @@ The most important docs for a beginner are not the most theoretical ones.
 They are the ones that stop expensive mistakes on day one.
 
 ### Templates
-- `templates/PROJECT_BRIEF.md` — minimum project brief
-- `templates/PRE_DEPLOY_CHECKLIST.md` — reusable pre-deploy checklist
-- `templates/INCIDENT_REPORT.md` — incident documentation template
-- `templates/CHANGELOG.md` — visible, traceable changes
+- `templates/PROJECT_BRIEF.md` — operational brief with risks, environments, and rollback
+- `templates/PRE_DEPLOY_CHECKLIST.md` — reusable checklist with real deploy blockers
+- `templates/INCIDENT_REPORT.md` — incident template with cause, containment, and prevention
+- `templates/CHANGELOG.md` — visible, traceable changes useful for rollback
 
 ### Examples
 - `examples/.env.example` — safe environment variable example
@@ -109,7 +109,8 @@ They are the ones that stop expensive mistakes on day one.
 - `checklists/dashboard-admin.md` — checklist for admin dashboards
 
 ### Scripts
-- `scripts/backup-example.sh` — simple backup script example
+- `scripts/backup-example.sh` — operational backup example with manifest, compression, and PostgreSQL dump when available
+- `scripts/predeploy-check-example.sh` — example pre-deploy sanity check
 
 ## Recommended reading order
 

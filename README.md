@@ -83,10 +83,10 @@ Los docs más importantes para un principiante no son los más teóricos.
 Son los que te evitan errores caros el primer día.
 
 ### Templates
-- `templates/PROJECT_BRIEF.md` — briefing mínimo de cualquier app
-- `templates/PRE_DEPLOY_CHECKLIST.md` — checklist reusable
-- `templates/INCIDENT_REPORT.md` — para documentar errores serios
-- `templates/CHANGELOG.md` — cambios visibles y trazables
+- `templates/PROJECT_BRIEF.md` — briefing operativo con riesgos, entornos y rollback
+- `templates/PRE_DEPLOY_CHECKLIST.md` — checklist reusable con bloqueos reales de deploy
+- `templates/INCIDENT_REPORT.md` — para documentar errores serios con causa, contención y prevención
+- `templates/CHANGELOG.md` — cambios visibles, trazables y útiles para rollback
 
 ### Examples
 - `examples/.env.example` — ejemplo seguro de variables de entorno
@@ -107,7 +107,8 @@ Son los que te evitan errores caros el primer día.
 - `checklists/dashboard-admin.md` — checklist para dashboards admin
 
 ### Scripts
-- `scripts/backup-example.sh` — ejemplo simple de script de backup
+- `scripts/backup-example.sh` — backup operativo con manifiesto, compresión y dump PostgreSQL si está disponible
+- `scripts/predeploy-check-example.sh` — chequeo orientativo antes de desplegar
 
 ## Orden recomendado de lectura
 
