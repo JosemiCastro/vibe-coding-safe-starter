@@ -130,15 +130,3 @@ Las contribuciones deben resolver un problema práctico, incluir un ejemplo veri
 ## Licencia
 
 MIT. Consulta [LICENSE](./LICENSE).
-
-## Recomendación fuerte
-
-Si vas a crear repos para principiantes de vibe coding, este repo debería ser más de **criterio operativo** que de teoría.
-
-Menos “qué es una API” y más:
-
-- dónde **NO** guardar claves
-- cuándo **NO** desplegar
-- cómo revertir
-- cómo pedir cambios pequeños a la IA
-- cómo no perder la base de datos

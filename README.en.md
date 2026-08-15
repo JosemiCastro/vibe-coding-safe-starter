@@ -130,15 +130,3 @@ Contributions should solve a practical problem, include a verifiable example, an
 ## License
 
 MIT. See [LICENSE](./LICENSE).
-
-## Strong recommendation
-
-A repository for vibe coding beginners should prioritize **operational judgment** over theory.
-
-Less “what is an API?” and more:
-
-- where **NOT** to store secrets
-- when **NOT** to deploy
-- how to roll back
-- how to ask AI for smaller changes
-- how not to lose your database
