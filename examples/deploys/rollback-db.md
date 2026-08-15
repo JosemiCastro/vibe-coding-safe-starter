@@ -1,23 +1,33 @@
-# Ejemplo de despliegue: cambio con base de datos
+# Caso realista: migración lanzada y error en base de datos
 
 ## Escenario
-Hay cambio de esquema, migración o borrado potencial.
+Había que añadir una columna, cambiar esquema o tocar una tabla.
+Tras el deploy, la app deja de responder bien o aparecen errores de DB.
 
 ## Antes del deploy
 - backup de base de datos confirmado
 - migración revisada
 - plan de rollback definido
-- impacto documentado
+- sabes qué versión era la última buena
+- validación mínima preparada
 
-## Deploy
-1. ejecuta migración
-2. despliega app
-3. valida flujo afectado
-4. revisa logs y errores de DB
+## Qué revisar nada más publicar
+1. ¿la app conecta?
+2. ¿la migración terminó completa?
+3. ¿faltan columnas, tablas o índices esperados?
+4. ¿hay errores nuevos en logs de DB o app?
 
-## Rollback
-Si falla:
-1. para cambios adicionales
-2. vuelve a versión anterior de la app
-3. restaura backup o ejecuta rollback de migración si está previsto
-4. valida integridad mínima
+## Si falla
+1. detén cambios adicionales
+2. vuelve a la versión anterior de la app
+3. aplica rollback de migración si existe o restaura backup
+4. valida login, lectura y escritura mínimas
+5. documenta el incidente antes de volver a intentarlo
+
+## Qué NO hacer
+- lanzar otra migración “rápida” encima
+- asumir que con volver el código basta si los datos ya cambiaron
+- tocar producción sin confirmar backup restaurable
+
+## Señal de que debiste frenar antes
+Si no podías explicar cómo recuperar la integridad de la base en pocos pasos, no estabas listo para desplegar ese cambio.

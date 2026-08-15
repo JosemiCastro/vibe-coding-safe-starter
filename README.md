@@ -73,6 +73,11 @@ Este repo intenta poner barandillas simples para evitar eso.
 - `docs/12-como-revertir.md` — rollback simple para gente no técnica
 - `docs/13-como-pedir-cambios-pequenos-a-la-ia.md` — cómo trocear cambios para no romper la app
 - `docs/14-como-no-perder-la-base-de-datos.md` — reglas mínimas para no cargarte la DB
+- `docs/en/10-where-not-to-store-secrets.md` — English version: where not to store secrets
+- `docs/en/11-when-not-to-deploy.md` — English version: when not to deploy
+- `docs/en/12-how-to-roll-back.md` — English version: how to roll back
+- `docs/en/13-how-to-ask-ai-for-small-changes.md` — English version: how to ask AI for small changes
+- `docs/en/14-how-not-to-lose-your-database.md` — English version: how not to lose your database
 
 Los docs más importantes para un principiante no son los más teóricos.
 Son los que te evitan errores caros el primer día.
@@ -90,10 +95,10 @@ Son los que te evitan errores caros el primer día.
 - `examples/stacks/nextjs.md` — base segura para proyectos Next.js
 - `examples/stacks/n8n.md` — base segura para workflows n8n
 - `examples/stacks/python.md` — base segura para proyectos Python
-- `examples/deploys/rollback-simple.md` — despliegue simple con rollback básico
-- `examples/deploys/rollback-db.md` — despliegue con plan de rollback de base de datos
-- `examples/deploys/rollback-automatizacion.md` — ejemplo de rollback para automatizaciones
-- `examples/deploys/rollback-landing.md` — ejemplo de rollback para landing o web pública
+- `examples/deploys/rollback-simple.md` — caso realista: login o cambio pequeño roto tras deploy
+- `examples/deploys/rollback-db.md` — caso realista: despliegue con error de base de datos
+- `examples/deploys/rollback-automatizacion.md` — caso realista: automatización disparando de más
+- `examples/deploys/rollback-landing.md` — caso realista: landing o formulario roto tras publicar
 
 ### Checklists
 - `checklists/saas-con-usuarios.md` — checklist para SaaS con usuarios
@@ -168,10 +173,3 @@ Menos "qué es una API" y más:
 - cómo revertir
 - cómo pedir cambios pequeños a la IA
 - cómo no perder la base de datos
-
-## Siguientes mejoras sugeridas
-
-- traducir también las docs operativas clave al inglés
-- añadir más ejemplos por stack y por tipo de app
-- ampliar los playbooks de deploy y rollback con casos reales
-- añadir más checklists por tipo de proyecto

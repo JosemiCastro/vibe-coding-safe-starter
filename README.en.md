@@ -2,6 +2,8 @@
 
 [![secret-scan](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/JosemiCastro/vibe-coding-safe-starter/actions/workflows/secret-scan.yml)
 
+[Versión en español](./README.md)
+
 A practical guide for people building software with AI without a strong programming background.
 
 The goal is not to kill the fun of building.
@@ -32,9 +34,11 @@ This repo adds simple guardrails to reduce exactly that.
 ## What you will find here
 
 - operational principles for building with AI without causing damage
-- basic security before publishing anything
-- backups and recovery
-- acceptable vs unacceptable technical debt
+- concrete rules about where NOT to store secrets
+- clear criteria for when NOT to deploy
+- simple rollback and recovery guidance
+- how to ask AI for smaller changes
+- how not to lose your database
 - pre-deploy checklists
 - templates for documenting projects, changes, and incidents
 - specific guides for Claude Code and Codex
@@ -54,7 +58,7 @@ This repo is designed to put simple rails around that.
 
 ## Structure
 
-### Docs
+### Spanish docs
 - `docs/01-principios.md` — core rules for working with AI safely
 - `docs/02-seguridad-basica.md` — secrets, permissions, auth, and public exposure
 - `docs/03-backups.md` — what to back up, how often, and how to verify it
@@ -64,6 +68,21 @@ This repo is designed to put simple rails around that.
 - `docs/07-claude-code.md` — how to use Claude Code safely as a beginner
 - `docs/08-codex.md` — how to use Codex with limits and judgment
 - `docs/09-claude-code-vs-codex.md` — when to use Claude Code vs Codex
+- `docs/10-donde-no-guardar-claves.md` — where not to store secrets
+- `docs/11-cuando-no-desplegar.md` — when not to deploy
+- `docs/12-como-revertir.md` — how to roll back
+- `docs/13-como-pedir-cambios-pequenos-a-la-ia.md` — how to ask AI for small changes
+- `docs/14-como-no-perder-la-base-de-datos.md` — how not to lose your database
+
+### English operational docs
+- `docs/en/10-where-not-to-store-secrets.md`
+- `docs/en/11-when-not-to-deploy.md`
+- `docs/en/12-how-to-roll-back.md`
+- `docs/en/13-how-to-ask-ai-for-small-changes.md`
+- `docs/en/14-how-not-to-lose-your-database.md`
+
+The most important docs for a beginner are not the most theoretical ones.
+They are the ones that stop expensive mistakes on day one.
 
 ### Templates
 - `templates/PROJECT_BRIEF.md` — minimum project brief
@@ -78,10 +97,10 @@ This repo is designed to put simple rails around that.
 - `examples/stacks/nextjs.md` — safe baseline for Next.js projects
 - `examples/stacks/n8n.md` — safe baseline for n8n workflows
 - `examples/stacks/python.md` — safe baseline for Python projects
-- `examples/deploys/rollback-simple.md` — simple deploy with basic rollback
-- `examples/deploys/rollback-db.md` — deploy with database rollback plan
-- `examples/deploys/rollback-automatizacion.md` — automation rollback example
-- `examples/deploys/rollback-landing.md` — landing rollback example
+- `examples/deploys/rollback-simple.md` — realistic case: login or small change broken after deploy
+- `examples/deploys/rollback-db.md` — realistic case: database error after deploy
+- `examples/deploys/rollback-automatizacion.md` — realistic case: automation firing too often
+- `examples/deploys/rollback-landing.md` — realistic case: landing or form broken after release
 
 ### Checklists
 - `checklists/saas-con-usuarios.md` — checklist for SaaS apps with users
@@ -94,14 +113,16 @@ This repo is designed to put simple rails around that.
 
 ## Recommended reading order
 
-1. `docs/01-principios.md`
-2. `docs/02-seguridad-basica.md`
-3. `docs/03-backups.md`
-4. `docs/05-checklist-antes-de-desplegar.md`
-5. `docs/06-trabajar-con-ia-sin-romperlo-todo.md`
+1. `docs/en/10-where-not-to-store-secrets.md`
+2. `docs/en/11-when-not-to-deploy.md`
+3. `docs/en/12-how-to-roll-back.md`
+4. `docs/en/13-how-to-ask-ai-for-small-changes.md`
+5. `docs/en/14-how-not-to-lose-your-database.md`
 6. `docs/07-claude-code.md`
 7. `docs/08-codex.md`
 8. `docs/09-claude-code-vs-codex.md`
+9. review `examples/stacks/` if one of them matches your project
+10. use `checklists/` and `examples/deploys/` before deploying
 
 ## Golden rule
 
@@ -116,23 +137,27 @@ If an app has users, payments, data, or third-party API access, never make direc
 ## Quick start
 
 1. clone or copy this repo
-2. fill in `templates/PROJECT_BRIEF.md`
-3. create your `.env` from `examples/.env.example`
-4. define a backup method before touching production
-5. use `templates/PRE_DEPLOY_CHECKLIST.md` on every deploy
-6. if you work with agents, also read `docs/07-claude-code.md`, `docs/08-codex.md`, and `docs/09-claude-code-vs-codex.md`
+2. read `docs/en/10-where-not-to-store-secrets.md` first
+3. continue with `docs/en/11-when-not-to-deploy.md` and `docs/en/12-how-to-roll-back.md`
+4. fill in `templates/PROJECT_BRIEF.md`
+5. create your `.env` from `examples/.env.example`
+6. define a backup method before touching production
+7. use `templates/PRE_DEPLOY_CHECKLIST.md` on every deploy
+8. if you work with agents, also read `docs/en/13-how-to-ask-ai-for-small-changes.md`, `docs/07-claude-code.md`, `docs/08-codex.md`, and `docs/09-claude-code-vs-codex.md`
 
 ## What this repo does NOT try to do
 
 It does not try to teach you programming from scratch.
 It does not try to be an academic manual.
 It does not try to cover every stack.
+It does not try to impress you with theory that will not prevent real mistakes.
 
 Its job is simpler:
 
 - help you avoid breaking important things
 - give you minimum operational judgment
 - make AI-assisted building safer and more deliberate
+- teach you to stop before an expensive mistake
 
 ## Strong recommendation
 
@@ -147,14 +172,3 @@ More:
 - how to roll back
 - how to ask AI for smaller changes
 - how not to lose your database
-
-## Suggested next improvements
-
-- English versions of all docs, not just the README
-- stack-specific examples (`React+Node`, `Next.js`, `n8n`, `Python`)
-- more deployment and rollback playbooks
-- checklist folders by app type
-
-## License
-
-MIT
