@@ -21,6 +21,7 @@ coverage/
 .idea/
 
 # backups and dumps
+backups/
 *.sql
 *.dump
 *.bak

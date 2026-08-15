@@ -32,7 +32,10 @@ from pathlib import Path
 import re, sys
 root = Path(sys.argv[1])
 broken = []
-for file in [root/'README.md', root/'README.en.md', root/'START_HERE.md', root/'START_HERE.en.md', *root.glob('docs/**/*.md')]:
+ignored_dirs = {'.git', 'node_modules', '.venv', 'venv', 'dist', 'build', '.next', 'coverage', 'backups'}
+for file in root.rglob('*.md'):
+    if ignored_dirs.intersection(file.parts):
+        continue
     text = file.read_text(encoding='utf-8')
     for target in re.findall(r'\[[^]]+\]\(([^)]+)\)', text):
         if target.startswith(('http://', 'https://', '#', 'mailto:')):

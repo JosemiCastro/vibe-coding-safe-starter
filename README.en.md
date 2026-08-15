@@ -107,6 +107,9 @@ Known-good state → small change → review → test → backup → deploy → 
 # Create backup; .env is excluded by default
 APP_ROOT=/path/project BACKUP_ROOT=/external/path ./scripts/backup-example.sh
 
+# Only when you explicitly accept a backup without the requested database dump
+ALLOW_PARTIAL_BACKUP=true APP_ROOT=/path/project ./scripts/backup-example.sh
+
 # Verify checksums and readability
 ./scripts/verify-backup-example.sh /path/to/backup
 

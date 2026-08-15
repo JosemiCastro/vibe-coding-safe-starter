@@ -20,6 +20,10 @@ trap 'rm -rf "$TEMP_DIR"' EXIT
 [ -f "$MANIFEST" ] || { echo "[error] Falta manifest.txt" >&2; exit 1; }
 [ -f "$CHECKSUMS" ] || { echo "[error] Falta SHA256SUMS" >&2; exit 1; }
 [ -n "$ARCHIVE" ] || { echo "[error] Falta archivo app-files-*.tar.gz" >&2; exit 1; }
+if ! awk '{print $2}' "$CHECKSUMS" | grep -Fxq "$(basename "$ARCHIVE")"; then
+  echo "[error] El archivo principal no figura en SHA256SUMS" >&2
+  exit 1
+fi
 
 printf '[info] Verificando checksums\n'
 (cd "$BACKUP_DIR" && sha256sum --check SHA256SUMS)

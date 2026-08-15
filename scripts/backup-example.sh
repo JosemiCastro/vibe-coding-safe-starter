@@ -12,11 +12,13 @@ set -euo pipefail
 # Opcional:
 #   DATABASE_URL=postgresql://...   # activa pg_dump si está instalado
 #   BACKUP_ENV=true                # copia .env bajo responsabilidad del usuario
+#   ALLOW_PARTIAL_BACKUP=true      # permite continuar si falla el dump solicitado
 
 DATE="$(date +%F-%H%M%S)"
 RAW_APP_ROOT="${APP_ROOT:-$(pwd)}"
 RAW_BACKUP_ROOT="${BACKUP_ROOT:-$RAW_APP_ROOT/backups}"
 BACKUP_ENV="${BACKUP_ENV:-false}"
+ALLOW_PARTIAL_BACKUP="${ALLOW_PARTIAL_BACKUP:-false}"
 BACKUP_NAME="backup-$DATE"
 
 info() { printf '[info] %s\n' "$*"; }
@@ -31,12 +33,18 @@ APP_ROOT="$(realpath -m "$RAW_APP_ROOT")"
 BACKUP_ROOT="$(realpath -m "$RAW_BACKUP_ROOT")"
 BACKUP_DIR="$BACKUP_ROOT/$BACKUP_NAME"
 FILES_ARCHIVE="$BACKUP_DIR/app-files-$DATE.tar.gz"
+TEMP_ARCHIVE="$BACKUP_DIR/.app-files-$DATE.tar.gz.tmp"
 DB_DUMP="$BACKUP_DIR/postgres-$DATE.dump"
 MANIFEST="$BACKUP_DIR/manifest.txt"
 CHECKSUMS="$BACKUP_DIR/SHA256SUMS"
+BACKUP_STATUS="completo"
+trap 'rm -f "$TEMP_ARCHIVE"' EXIT
 
 [ -d "$APP_ROOT" ] || fail "APP_ROOT no existe: $APP_ROOT"
 
+if [ "$BACKUP_ROOT" = "$APP_ROOT" ]; then
+  fail "BACKUP_ROOT no puede ser la raíz del proyecto; usa $APP_ROOT/backups o una ruta externa"
+fi
 if [[ "$BACKUP_ROOT" == "$APP_ROOT"/* ]] && [ "$BACKUP_ROOT" != "$APP_ROOT/backups" ]; then
   fail "BACKUP_ROOT dentro del proyecto debe ser $APP_ROOT/backups o una ruta externa"
 fi
@@ -56,6 +64,7 @@ info "Destino: $BACKUP_DIR"
   echo "git_commit=$(git -C "$APP_ROOT" rev-parse HEAD 2>/dev/null || echo no-git)"
   echo "environment_file_included=false"
   echo "database_dump=false"
+  echo "backup_status=pending"
 } > "$MANIFEST"
 
 # .env se excluye siempre del archivo general. Solo se copia con opt-in explícito.
@@ -67,31 +76,49 @@ if [ "$BACKUP_ENV" = "true" ] && [ -f "$APP_ROOT/.env" ]; then
 fi
 
 # Dump PostgreSQL en formato custom, más adecuado para restaurar con pg_restore.
-if command -v pg_dump >/dev/null 2>&1; then
-  if [ -n "${DATABASE_URL:-}" ]; then
+DB_REQUESTED=false
+if [ -n "${DATABASE_URL:-}" ] || { [ -n "${PGHOST:-}" ] && [ -n "${PGDATABASE:-}" ] && [ -n "${PGUSER:-}" ]; }; then
+  DB_REQUESTED=true
+fi
+
+if [ "$DB_REQUESTED" = "true" ]; then
+  if ! command -v pg_dump >/dev/null 2>&1; then
+    if [ "$ALLOW_PARTIAL_BACKUP" = "true" ]; then
+      BACKUP_STATUS="parcial"
+      warn "Se solicitó PostgreSQL, pero pg_dump no está instalado. Backup parcial autorizado."
+    else
+      fail "Se solicitó PostgreSQL, pero pg_dump no está instalado. Usa ALLOW_PARTIAL_BACKUP=true solo si aceptas un backup incompleto."
+    fi
+  elif [ -n "${DATABASE_URL:-}" ]; then
     info "Generando dump PostgreSQL"
     if PGDATABASE="$DATABASE_URL" pg_dump --format=custom --file="$DB_DUMP"; then
       chmod 600 "$DB_DUMP"
       sed -i 's/database_dump=false/database_dump=true/' "$MANIFEST"
       info "Dump generado: $DB_DUMP"
+    elif [ "$ALLOW_PARTIAL_BACKUP" = "true" ]; then
+      rm -f "$DB_DUMP"
+      BACKUP_STATUS="parcial"
+      warn "pg_dump falló. Backup parcial autorizado."
     else
       rm -f "$DB_DUMP"
-      warn "pg_dump falló; el backup continuará sin base de datos"
+      fail "pg_dump falló; no se declarará completo un backup sin la base de datos solicitada"
     fi
-  elif [ -n "${PGHOST:-}" ] && [ -n "${PGDATABASE:-}" ] && [ -n "${PGUSER:-}" ]; then
+  else
     info "Generando dump PostgreSQL con variables PG*"
     if pg_dump --format=custom --file="$DB_DUMP"; then
       chmod 600 "$DB_DUMP"
       sed -i 's/database_dump=false/database_dump=true/' "$MANIFEST"
+    elif [ "$ALLOW_PARTIAL_BACKUP" = "true" ]; then
+      rm -f "$DB_DUMP"
+      BACKUP_STATUS="parcial"
+      warn "pg_dump falló. Backup parcial autorizado."
     else
       rm -f "$DB_DUMP"
-      warn "pg_dump falló; el backup continuará sin base de datos"
+      fail "pg_dump falló; no se declarará completo un backup sin la base de datos solicitada"
     fi
-  else
-    warn "Sin DATABASE_URL o variables PG*: se omite PostgreSQL"
   fi
 else
-  warn "pg_dump no está instalado: se omite PostgreSQL"
+  warn "No se solicitó backup PostgreSQL"
 fi
 
 info "Comprimiendo archivos sin secretos comunes, dependencias ni artefactos"
@@ -114,9 +141,10 @@ tar \
   --exclude='./.venv' \
   --exclude='./venv' \
   --exclude='./__pycache__' \
-  -czf "$FILES_ARCHIVE" \
+  -czf "$TEMP_ARCHIVE" \
   -C "$APP_ROOT" .
-chmod 600 "$FILES_ARCHIVE"
+chmod 600 "$TEMP_ARCHIVE"
+mv "$TEMP_ARCHIVE" "$FILES_ARCHIVE"
 
 (
   cd "$BACKUP_DIR"
@@ -130,10 +158,11 @@ chmod 600 "$FILES_ARCHIVE"
   echo "files_archive_size=$(du -h "$FILES_ARCHIVE" | cut -f1)"
   echo "checksums=$(basename "$CHECKSUMS")"
 } >> "$MANIFEST"
+sed -i "s/backup_status=pending/backup_status=$BACKUP_STATUS/" "$MANIFEST"
 
 cat <<EOF
 
-Backup completado:
+Backup $BACKUP_STATUS:
 - carpeta: $BACKUP_DIR
 - manifiesto: $MANIFEST
 - checksums: $CHECKSUMS

@@ -107,6 +107,9 @@ Estado bueno → cambio pequeño → revisión → prueba → backup → deploy 
 # Crear backup; excluye .env por defecto
 APP_ROOT=/ruta/proyecto BACKUP_ROOT=/ruta/externa ./scripts/backup-example.sh
 
+# Solo si aceptas expresamente un backup sin el dump solicitado
+ALLOW_PARTIAL_BACKUP=true APP_ROOT=/ruta/proyecto ./scripts/backup-example.sh
+
 # Verificar checksums y legibilidad
 ./scripts/verify-backup-example.sh /ruta/al/backup
 

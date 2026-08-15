@@ -40,14 +40,16 @@ fi
 SECRET_REGEX='(OPENAI_API_KEY|GEMINI_API_KEY|ANTHROPIC_API_KEY|CLAUDE_API_KEY|DATABASE_URL|PASSWORD|SECRET|TOKEN)[[:space:]]*=[[:space:]]*[^[:space:]$<{][^[:space:]]{7,}'
 SECRET_HITS="$(git -C "$APP_ROOT" grep -nEI "$SECRET_REGEX" -- ':!*.md' ':!*.example' ':!scripts/predeploy-check-example.sh' 2>/dev/null || true)"
 if [ -n "$SECRET_HITS" ]; then
-  block "Posibles secretos hardcodeados en archivos versionados:"
-  printf '%s\n' "$SECRET_HITS"
+  block "Posibles secretos hardcodeados en archivos versionados (contenido redactado):"
+  printf '%s\n' "$SECRET_HITS" | cut -d: -f1,2 | sort -u
 else
   ok "Sin patrones obvios de secretos en archivos versionados"
 fi
 
-if [ -f "$APP_ROOT/CHANGELOG.md" ] || [ -f "$APP_ROOT/templates/CHANGELOG.md" ]; then
-  ok "Changelog disponible"
+if [ -f "$APP_ROOT/CHANGELOG.md" ]; then
+  ok "Changelog del proyecto disponible"
+elif [ -f "$APP_ROOT/templates/CHANGELOG.md" ]; then
+  warn "Solo existe la plantilla de changelog; crea CHANGELOG.md en la raíz"
 else
   warn "No hay changelog"
 fi
@@ -55,10 +57,20 @@ fi
 LATEST_BACKUP="$(find "$APP_ROOT/backups" -mindepth 1 -maxdepth 1 -type d -name 'backup-*' -printf '%T@ %p\n' 2>/dev/null | sort -nr | cut -d' ' -f2- | head -1 || true)"
 if [ -n "$LATEST_BACKUP" ]; then
   AGE_HOURS=$(( ( $(date +%s) - $(stat -c %Y "$LATEST_BACKUP") ) / 3600 ))
-  if [ "$AGE_HOURS" -le "$BACKUP_MAX_AGE_HOURS" ]; then
-    ok "Backup reciente: $LATEST_BACKUP (${AGE_HOURS}h)"
-  else
+  BACKUP_ARCHIVE="$(find "$LATEST_BACKUP" -maxdepth 1 -name 'app-files-*.tar.gz' -print -quit)"
+
+  if [ "$AGE_HOURS" -gt "$BACKUP_MAX_AGE_HOURS" ]; then
     block "Último backup demasiado antiguo: ${AGE_HOURS}h"
+  elif [ ! -f "$LATEST_BACKUP/manifest.txt" ] || [ ! -f "$LATEST_BACKUP/SHA256SUMS" ] || [ -z "$BACKUP_ARCHIVE" ]; then
+    block "El backup reciente está incompleto: faltan manifiesto, checksums o archivo"
+  elif ! awk '{print $2}' "$LATEST_BACKUP/SHA256SUMS" | grep -Fxq "$(basename "$BACKUP_ARCHIVE")"; then
+    block "El archivo principal no figura en SHA256SUMS"
+  elif ! command -v sha256sum >/dev/null 2>&1 || ! (cd "$LATEST_BACKUP" && sha256sum --check --status SHA256SUMS); then
+    block "El backup reciente no supera la verificación de checksums"
+  elif ! command -v tar >/dev/null 2>&1 || ! tar -tzf "$BACKUP_ARCHIVE" >/dev/null; then
+    block "El archivo del backup reciente no es legible"
+  else
+    ok "Backup reciente y verificado: $LATEST_BACKUP (${AGE_HOURS}h)"
   fi
 else
   warn "No se encontró backup local; confirma que existe uno externo si el deploy toca datos"

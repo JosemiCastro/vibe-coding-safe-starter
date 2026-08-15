@@ -13,6 +13,16 @@ Cambios relevantes de este repositorio.
 ### Fixed
 -
 
+## 0.2.1 — 2026-08-15
+
+### Fixed
+- el backup falla si se solicitó PostgreSQL y `pg_dump` no puede completarse
+- los backups parciales requieren autorización explícita y quedan marcados
+- el predeploy redacta los valores de posibles secretos
+- el predeploy exige manifiesto, checksums y archivo legible
+- las pruebas ya no aceptan directorios de backup vacíos
+- GitHub Actions fijadas a commits inmutables
+
 ## 0.2.0 — 2026-08-15
 
 ### Added
