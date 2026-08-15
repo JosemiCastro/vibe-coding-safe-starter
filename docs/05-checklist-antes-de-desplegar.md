@@ -1,29 +1,46 @@
 # Checklist antes de desplegar
 
+Usa esto justo antes de publicar algo.
+Si marcas muchas cosas con dudas, no despliegues todavía.
+
 ## Seguridad
-- [ ] No hay secretos en código ni en commits
-- [ ] `.env` configurado correctamente
-- [ ] No se ha abierto nada admin sin login
+- [ ] no hay secretos en código ni en commits
+- [ ] `.env` está configurado correctamente
+- [ ] no se ha abierto nada admin sin login
+- [ ] no has expuesto claves en logs o capturas
 
 ## Datos
-- [ ] Hay backup reciente de la base de datos
-- [ ] Si hay uploads, también tienen copia
-- [ ] Hay plan de rollback
+- [ ] hay backup reciente de la base de datos
+- [ ] si hay uploads, también tienen copia
+- [ ] si hay automatizaciones, existe export o versión anterior
+- [ ] hay plan de rollback
 
 ## Cambio
-- [ ] Sabes qué archivos cambia este deploy
-- [ ] El cambio está documentado en changelog o nota interna
-- [ ] El alcance del cambio es entendible
+- [ ] sabes qué archivos cambia este deploy
+- [ ] el cambio está documentado en changelog o nota interna
+- [ ] el alcance del cambio es entendible
+- [ ] no estás mezclando arreglo y refactor grande
 
 ## Validación
-- [ ] Se ha probado el flujo principal
-- [ ] Se ha probado login si aplica
-- [ ] Se ha probado el caso exacto que se quería arreglar
+- [ ] se ha probado el flujo principal
+- [ ] se ha probado login si aplica
+- [ ] se ha probado el caso exacto que se quería arreglar
+- [ ] sabes qué vas a mirar justo después del deploy
 
 ## Infra
-- [ ] Variables de entorno correctas en servidor/panel
-- [ ] Dominio y puertos revisados si aplica
-- [ ] Logs accesibles tras deploy
+- [ ] variables de entorno correctas en servidor/panel
+- [ ] dominio, puertos y rutas revisados si aplica
+- [ ] logs accesibles tras deploy
+- [ ] sabes cuál es la versión anterior buena
+
+## Si la respuesta es “no sé”
+Si no sabes responder cualquiera de estas preguntas:
+- ¿qué cambia?
+- ¿cómo se prueba?
+- ¿cómo se revierte?
+- ¿toca datos reales?
+
+no despliegues todavía.
 
 ## Regla final
-Si no puedes explicar en 30 segundos cómo volver atrás, no despliegues todavía.
+Si no puedes explicar en 30 segundos cómo volver atrás, no despliegues.

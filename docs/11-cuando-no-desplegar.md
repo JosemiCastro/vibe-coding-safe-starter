@@ -4,7 +4,6 @@ La mayoría de problemas de principiantes no vienen por programar mal.
 Vienen por desplegar demasiado pronto.
 
 ## No despliegues si
-
 - no entiendes qué cambia
 - no sabes qué archivos ha tocado la IA
 - no tienes backup si hay datos reales
@@ -32,8 +31,10 @@ Si no sabes responder "cómo vuelvo atrás en 5 minutos", no despliegues.
 ### 4. No has visto logs ni error real
 Si la corrección se hizo a ojo, no despliegues.
 
-## Regla de seguridad
+### 5. El deploy es tu forma de descubrir si funciona
+Eso no es validación. Eso es apostar.
 
+## Regla de seguridad
 Si el cambio afecta:
 - login
 - usuarios
@@ -45,15 +46,22 @@ Si el cambio afecta:
 sube el nivel de prudencia.
 
 ## Qué hacer en vez de desplegar
-
 - pedir a la IA resumen de archivos afectados
 - pedir riesgos
 - pedir rollback
 - probar el flujo concreto
 - hacer commit del estado bueno
 - separar el cambio en partes más pequeñas
+- pedir que quite refactors no relacionados
+
+## Microchecklist
+Antes de desplegar deberías poder decir:
+- qué cambia
+- cómo se prueba
+- cómo se revierte
+- si toca datos reales
+- qué mirarás tras publicar
 
 ## Regla final
-
 Tu problema casi nunca será "desplegué tarde".
 Tu problema será "desplegué algo que no entendía".

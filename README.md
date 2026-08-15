@@ -74,6 +74,9 @@ Este repo intenta poner barandillas simples para evitar eso.
 - `docs/13-como-pedir-cambios-pequenos-a-la-ia.md` — cómo trocear cambios para no romper la app
 - `docs/14-como-no-perder-la-base-de-datos.md` — reglas mínimas para no cargarte la DB
 
+Los docs más importantes para un principiante no son los más teóricos.
+Son los que te evitan errores caros el primer día.
+
 ### Templates
 - `templates/PROJECT_BRIEF.md` — briefing mínimo de cualquier app
 - `templates/PRE_DEPLOY_CHECKLIST.md` — checklist reusable
@@ -168,7 +171,7 @@ Menos "qué es una API" y más:
 
 ## Siguientes mejoras sugeridas
 
-- traducir también las docs clave al inglés
+- traducir también las docs operativas clave al inglés
 - añadir más ejemplos por stack y por tipo de app
-- ampliar los playbooks de deploy y rollback
+- ampliar los playbooks de deploy y rollback con casos reales
 - añadir más checklists por tipo de proyecto
